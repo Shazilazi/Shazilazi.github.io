@@ -1,3 +1,4 @@
+<img width="1150" height="767" alt="Screenshot 2026-06-17 220049" src="https://github.com/user-attachments/assets/d93b034c-e9ec-48c2-b3c3-1390d288052f" />
 # Caleb — Data Analytics Portfolio
 
 Personal portfolio site showcasing data analytics projects, built with Jekyll and deployed via GitHub Actions to GitHub Pages.
