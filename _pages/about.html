@@ -1,1 +1,58 @@
+---
+layout: default
+title: About
+permalink: /about/
+---
 
+<div class="container">
+  <div class="about-layout">
+    <aside class="about-sidebar">
+      <p class="about-sidebar__name">{{ site.author.name }}</p>
+      <p class="about-sidebar__role">Data Analyst</p>
+      <nav class="about-sidebar__links">
+        {% if site.author.linkedin %}
+          <a href="{{ site.author.linkedin }}" target="_blank" rel="noopener">↗ LinkedIn</a>
+        {% endif %}
+        {% if site.author.github %}
+          <a href="{{ site.author.github }}" target="_blank" rel="noopener">↗ GitHub</a>
+        {% endif %}
+        {% if site.author.email %}
+          <a href="mailto:{{ site.author.email }}">✉ {{ site.author.email }}</a>
+        {% endif %}
+      </nav>
+    </aside>
+
+    <div class="about-body">
+      <h2>About me</h2>
+      <p>
+        I'm a data analyst based in {{ site.author.location }}. I work at the intersection
+        of data engineering and storytelling — building pipelines and dashboards that
+        help teams make faster, more confident decisions.
+      </p>
+      <p>
+        Update this section with your own background. What industries have you worked in?
+        What problems do you find most interesting? What's your approach to analysis?
+      </p>
+
+      <h2>What I do</h2>
+      <p>
+        My work typically spans exploratory data analysis, building dashboards for
+        non-technical stakeholders, writing SQL for complex reporting queries, and
+        automating repetitive data tasks with Python.
+      </p>
+
+      <h2>Background</h2>
+      <p>
+        Add your education, previous roles, or anything else relevant here. Keep it
+        concise — a few short paragraphs is enough. Let the projects page do the
+        heavy lifting.
+      </p>
+
+      <h2>Outside work</h2>
+      <p>
+        A brief personal note here makes your portfolio feel human. What are you
+        interested in beyond data? This doesn't need to be long.
+      </p>
+    </div>
+  </div>
+</div>
