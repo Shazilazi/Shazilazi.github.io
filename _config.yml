@@ -1,1 +1,36 @@
+title: "Caleb"
+tagline: "Data Analyst"
+description: "Portfolio showcasing data analytics, visualisation, and insights work."
+url: "https://shazilazi.github.io/"
+baseurl: ""
 
+author:
+  name: "Caleb"
+  bio: "I turn messy data into clear decisions."
+  location: "Port Elizabeth, South Africa"
+  linkedin: ""
+  github: "https://shazilazi.github.io/"
+  email: "caleb.trent93@gmail.com"
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-seo-tag
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
