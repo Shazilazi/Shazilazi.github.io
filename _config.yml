@@ -12,6 +12,10 @@ author:
   github: "https://shazilazi.github.io/"
   email: "caleb.trent93@gmail.com"
 
+# Tell Jekyll to process the _pages folder
+include:
+  - _pages
+
 # Collections
 collections:
   projects:
@@ -19,6 +23,10 @@ collections:
     permalink: /projects/:name/
 
 defaults:
+  - scope:
+      path: "_pages"
+    values:
+      layout: "default"
   - scope:
       path: ""
       type: "projects"
@@ -34,3 +42,5 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
+
+
