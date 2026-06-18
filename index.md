@@ -83,8 +83,7 @@ layout: default
             <span>SQL</span>
           </div>
           <div class="skill-icon-item">
-            <i class="devicon-visualbasic-plain colored"></i>
-            <span>VBA</span>
+            <span class="tag">VBA</span>
           </div>
         </div>
       </div>
@@ -113,8 +112,8 @@ layout: default
             <span>Pandas</span>
           </div>
           <div class="skill-icon-item">
-            <i class="devicon-googlecloud-plain colored"></i>
-            <span>BigQuery</span>
+            <i class="devicon-azure-plain colored"></i
+            <span>Azure SQL</span>
           </div>
           <div class="skill-icon-item">
             <i class="devicon-github-plain colored"></i>
@@ -135,7 +134,7 @@ layout: default
           </div>
           <div class="skill-icon-item">
             <i class="devicon-anaconda-original colored"></i>
-            <span>Docker</span>
+            <span>Anaconda</span>
           </div>
         </div>
       </div>
