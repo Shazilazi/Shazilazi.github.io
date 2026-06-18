@@ -90,10 +90,10 @@ layout: default
       <div>
         <p class="skill-group__label">Visualisation</p>
         <div class="skill-group__items">
-          <div class="skill-icon-item">
+          <!-- <div class="skill-icon-item">
             <i class="devicon-matplotlib-plain colored"></i>
             <span>Matplotlib</span>
-          </div>
+          </div> -->
           <div class="skill-icon-item">
             <i class="devicon-plotly-plain colored"></i>
             <span>Plotly</span>
