@@ -83,8 +83,8 @@ layout: default
             <span>SQL</span>
           </div>
           <div class="skill-icon-item">
-            <i class="devicon-r-plain colored"></i>
-            <span>R</span>
+            <i class="devicon-visualbasic-plain colored"></i>
+            <span>VBA</span>
           </div>
         </div>
       </div>
@@ -100,8 +100,8 @@ layout: default
             <span>Plotly</span>
           </div>
           <div class="skill-icon-item">
-            <i class="devicon-grafana-plain colored"></i>
-            <span>Grafana</span>
+            <i class="devicon-minitab-plain"></i>
+            <span>Power BI</span>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@ layout: default
             <span>VS Code</span>
           </div>
           <div class="skill-icon-item">
-            <i class="devicon-docker-plain colored"></i>
+            <i class="devicon-anaconda-original colored"></i>
             <span>Docker</span>
           </div>
         </div>
