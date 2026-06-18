@@ -112,7 +112,7 @@ layout: default
             <span>Pandas</span>
           </div>
           <div class="skill-icon-item">
-            <i class="devicon-azure-plain colored"></i
+            <i class="devicon-azure-plain colored"></i>
             <span>Azure SQL</span>
           </div>
           <div class="skill-icon-item">
