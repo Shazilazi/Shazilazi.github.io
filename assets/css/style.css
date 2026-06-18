@@ -270,12 +270,83 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================
-   SKILLS
+   SKILL ICONS
+   ============================================ */
+.skill-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.6rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-width: 70px;
+  transition: border-color 0.2s;
+}
+.skill-icon-item:hover { border-color: var(--accent); }
+.skill-icon-item i {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.skill-icon-item span {
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  text-align: center;
+  white-space: nowrap;
+}
+.skill-group__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ============================================
+   PROJECT CARD IMAGE
+   ============================================ */
+.project-card__image {
+  width: calc(100% + 3.5rem);
+  margin: -1.75rem -1.75rem 1rem -1.75rem;
+  overflow: hidden;
+  border-radius: var(--radius) var(--radius) 0 0;
+  aspect-ratio: 16 / 9;
+  background: var(--border);
+}
+.project-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.project-card:hover .project-card__image img {
+  transform: scale(1.03);
+}
+
+/* ============================================
+   PROJECT DETAIL IMAGE
+   ============================================ */
+.project-detail__image {
+  margin: 2rem 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  aspect-ratio: 16 / 9;
+  background: var(--surface);
+}
+.project-detail__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   SKILLS GRID
    ============================================ */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
 }
 .skill-group__label {
   font-family: var(--font-mono);
@@ -285,14 +356,8 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.08em;
   margin-bottom: 0.75rem;
 }
-.skill-group__items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
 
 /* ============================================
-   ABOUT PAGE
    ============================================ */
 .about-layout {
   display: grid;
