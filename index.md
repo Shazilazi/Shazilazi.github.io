@@ -45,6 +45,11 @@ layout: default
       {% assign featured = site.projects | where: "featured", true | limit: 3 %}
       {% for project in featured %}
         <a href="{{ project.url }}" class="project-card">
+          {% if project.image %}
+          <div class="project-card__image">
+            <img src="{{ project.image }}" alt="{{ project.title }}" loading="lazy" />
+          </div>
+          {% endif %}
           <span class="project-card__category">{{ project.category }}</span>
           <h3 class="project-card__title">{{ project.title }}</h3>
           <p class="project-card__summary">{{ project.summary }}</p>
@@ -69,35 +74,69 @@ layout: default
       <div>
         <p class="skill-group__label">Languages</p>
         <div class="skill-group__items">
-          <span class="tag">Python</span>
-          <span class="tag">SQL</span>
-          <span class="tag">R</span>
+          <div class="skill-icon-item">
+            <i class="devicon-python-plain colored"></i>
+            <span>Python</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-azuresqldatabase-plain colored"></i>
+            <span>SQL</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-r-plain colored"></i>
+            <span>R</span>
+          </div>
         </div>
       </div>
       <div>
         <p class="skill-group__label">Visualisation</p>
         <div class="skill-group__items">
-          <span class="tag">Power BI</span>
-          <span class="tag">Tableau</span>
-          <span class="tag">Matplotlib</span>
-          <span class="tag">Plotly</span>
+          <div class="skill-icon-item">
+            <i class="devicon-matplotlib-plain colored"></i>
+            <span>Matplotlib</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-plotly-plain colored"></i>
+            <span>Plotly</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-grafana-plain colored"></i>
+            <span>Grafana</span>
+          </div>
         </div>
       </div>
       <div>
         <p class="skill-group__label">Data & tools</p>
         <div class="skill-group__items">
-          <span class="tag">Pandas</span>
-          <span class="tag">Excel</span>
-          <span class="tag">BigQuery</span>
-          <span class="tag">dbt</span>
+          <div class="skill-icon-item">
+            <i class="devicon-pandas-plain colored"></i>
+            <span>Pandas</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-googlecloud-plain colored"></i>
+            <span>BigQuery</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-github-plain colored"></i>
+            <span>GitHub</span>
+          </div>
         </div>
       </div>
       <div>
-        <p class="skill-group__label">Methods</p>
+        <p class="skill-group__label">Environment</p>
         <div class="skill-group__items">
-          <span class="tag">EDA</span>
-          <span class="tag">A/B Testing</span>
-          <span class="tag">Forecasting</span>
+          <div class="skill-icon-item">
+            <i class="devicon-jupyter-plain colored"></i>
+            <span>Jupyter</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-vscode-plain colored"></i>
+            <span>VS Code</span>
+          </div>
+          <div class="skill-icon-item">
+            <i class="devicon-docker-plain colored"></i>
+            <span>Docker</span>
+          </div>
         </div>
       </div>
     </div>
