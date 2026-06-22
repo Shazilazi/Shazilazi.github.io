@@ -6,7 +6,9 @@ baseurl: ""
 
 author:
   name: "Caleb"
+  role: "Data Analyst"
   bio: "I turn messy data into clear decisions."
+  company: "Frontline Research Group"
   location: "Port Elizabeth, South Africa"
   linkedin: "https://www.linkedin.com/in/caleb-trent-aa6ba915a/"
   github: "https://github.com/Shazilazi"
