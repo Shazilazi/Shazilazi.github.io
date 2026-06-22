@@ -39,32 +39,39 @@ layout: default
   <div class="container">
     <div class="section__header">
       <h2 class="section__title">Featured projects</h2>
-      <a href="/projects/" style="font-size: 0.875rem; color: var(--muted);">All projects →</a>
+      <a href="{{ '/projects/' | relative_url }}" style="font-size: 0.875rem; color: var(--muted);">
+        All projects →
+      </a>
     </div>
+    {% assign featured = site.projects | where: "featured", true %}
     <div class="projects-grid">
-      {% assign featured = site.projects | where: "featured", true %}
       {% if featured.size > 0 %}
         {% for project in featured limit:3 %}
+          <a href="{{ project.url | relative_url }}" class="project-card">
+            {% if project.image %}
+              <div class="project-card__image">
+                <img src="{{ project.image | relative_url }}" alt="{{ project.title }}" loading="lazy" />
+              </div>
+            {% endif %}
+            <span class="project-card__category">
+              {{ project.category | default: "Project" }}
+            </span>
+            <h3 class="project-card__title">{{ project.title }}</h3>
+            <p class="project-card__summary">
+              {{ project.summary }}
+            </p>
+            {% if project.tools %}
+              <div class="project-card__tools">
+                {% for tool in project.tools %}
+                  <span class="tool-badge">{{ tool }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </a>
+        {% endfor %}
       {% else %}
         <p>No featured projects yet — check back soon.</p>
       {% endif %}
-      {% for project in featured %}
-        <a href="{{ project.url }}" class="project-card">
-          {% if project.image %}
-          <div class="project-card__image">
-            <img src="{{ project.image }}" alt="{{ project.title }}" loading="lazy" />
-          </div>
-          {% endif %}
-          <span class="project-card__category">{{ project.category }}</span>
-          <h3 class="project-card__title">{{ project.title }}</h3>
-          <p class="project-card__summary">{{ project.summary }}</p>
-          <div class="project-card__tools">
-            {% for tool in project.tools %}
-              <span class="tool-badge">{{ tool }}</span>
-            {% endfor %}
-          </div>
-        </a>
-      {% endfor %}
     </div>
   </div>
 </section>
