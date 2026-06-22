@@ -42,7 +42,12 @@ layout: default
       <a href="/projects/" style="font-size: 0.875rem; color: var(--muted);">All projects →</a>
     </div>
     <div class="projects-grid">
-      {% assign featured = site.projects | where: "featured", true | limit: 3 %}
+      {% assign featured = site.projects | where: "featured", true %}
+      {% if featured.size > 0 %}
+        {% for project in featured limit:3 %}
+      {% else %}
+        <p>No featured projects yet — check back soon.</p>
+      {% endif %}
       {% for project in featured %}
         <a href="{{ project.url }}" class="project-card">
           {% if project.image %}
