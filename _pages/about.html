@@ -1,40 +1,15 @@
 ---
-# Front matter — three pieces of information Jekyll needs:
-# layout: which template to wrap this page in (default.html)
-# title: used in the browser tab e.g. "About · Caleb"
-# permalink: the exact URL this page will be published at.
-#            Without this, Jekyll would guess the URL from the
-#            filename, which may not match what your nav links expect.
 layout: default
 title: About
 permalink: /about/
 ---
 
-<!-- No wrapping <section> here — the about-layout grid handles
-     the spacing and structure directly inside .container -->
 <div class="container">
   <div class="about-layout">
-    <!-- about-layout is a two-column CSS grid defined in style.css:
-         sidebar on the left (1 part), body on the right (2 parts) -->
 
-    <!-- ============================================
-         SIDEBAR
-         <aside> is a semantic HTML element — it marks
-         content that is related to but separate from
-         the main content. Perfect for a profile panel.
-         ============================================ -->
     <aside class="about-sidebar">
-
-      <!-- Name and role pulled from _config.yml -->
       <p class="about-sidebar__name">{{ site.author.name }}</p>
-      <p class="about-sidebar__role">Data Analyst</p>
-      <!-- Note: you could also use " site.author.role " here
-           since you added role: to _config.yml — both work fine -->
-
-      <!-- Social links — each wrapped in " if " so they only
-           render if the value exists in _config.yml.
-           ↗ and ✉ are Unicode characters used as visual icons —
-           no icon library needed for simple decorative symbols. -->
+      <p class="about-sidebar__role">{{ site.author.role }}</p>
       <nav class="about-sidebar__links">
         {% if site.author.linkedin %}
           <a href="{{ site.author.linkedin }}" target="_blank" rel="noopener">↗ LinkedIn</a>
@@ -43,20 +18,11 @@ permalink: /about/
           <a href="{{ site.author.github }}" target="_blank" rel="noopener">↗ GitHub</a>
         {% endif %}
         {% if site.author.email %}
-          <!-- mailto: opens the user's email client with your address pre-filled.
-               " site.author.email " is used as both the href value
-               and the visible link text. -->
           <a href="mailto:{{ site.author.email }}">✉ {{ site.author.email }}</a>
         {% endif %}
       </nav>
-
     </aside>
 
-    <!-- ============================================
-         MAIN BODY
-         The written content of the about page.
-         Styled by .about-body rules in style.css.
-         ============================================ -->
     <div class="about-body">
 
       <h2>About me</h2>
@@ -81,9 +47,6 @@ permalink: /about/
         for improvement through analysis.
       </p>
       <p>My core areas of expertise include:</p>
-
-      <!-- <ul> is an unordered list — renders as bullet points.
-           Each <li> is a list item. -->
       <ul>
         <li>Power BI dashboard development and data visualisation</li>
         <li>SQL querying, reporting, and data modelling</li>
@@ -92,15 +55,12 @@ permalink: /about/
         <li>Business intelligence and performance reporting</li>
         <li>Data transformation and process optimisation</li>
       </ul>
-
       <p>
         I particularly enjoy projects that combine technical problem-solving with business impact,
         where insights can directly influence strategy, operations, or performance improvements.
       </p>
 
       <h2>Core Skills</h2>
-      <!-- A dot-separated list of skills — simple and scannable.
-           This is a common pattern on portfolios and CVs. -->
       <p>
         Power BI • SQL • Python • Excel • Data Visualisation • Data Modelling • ETL Processes
         • Dashboard Design • Reporting Automation • Business Intelligence • Data Analysis
