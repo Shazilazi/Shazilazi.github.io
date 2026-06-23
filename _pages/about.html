@@ -1,14 +1,40 @@
 ---
+# Front matter — three pieces of information Jekyll needs:
+# layout: which template to wrap this page in (default.html)
+# title: used in the browser tab e.g. "About · Caleb"
+# permalink: the exact URL this page will be published at.
+#            Without this, Jekyll would guess the URL from the
+#            filename, which may not match what your nav links expect.
 layout: default
 title: About
 permalink: /about/
 ---
 
+<!-- No wrapping <section> here — the about-layout grid handles
+     the spacing and structure directly inside .container -->
 <div class="container">
   <div class="about-layout">
+    <!-- about-layout is a two-column CSS grid defined in style.css:
+         sidebar on the left (1 part), body on the right (2 parts) -->
+
+    <!-- ============================================
+         SIDEBAR
+         <aside> is a semantic HTML element — it marks
+         content that is related to but separate from
+         the main content. Perfect for a profile panel.
+         ============================================ -->
     <aside class="about-sidebar">
+
+      <!-- Name and role pulled from _config.yml -->
       <p class="about-sidebar__name">{{ site.author.name }}</p>
       <p class="about-sidebar__role">Data Analyst</p>
+      <!-- Note: you could also use {{ site.author.role }} here
+           since you added role: to _config.yml — both work fine -->
+
+      <!-- Social links — each wrapped in {% if %} so they only
+           render if the value exists in _config.yml.
+           ↗ and ✉ are Unicode characters used as visual icons —
+           no icon library needed for simple decorative symbols. -->
       <nav class="about-sidebar__links">
         {% if site.author.linkedin %}
           <a href="{{ site.author.linkedin }}" target="_blank" rel="noopener">↗ LinkedIn</a>
@@ -17,105 +43,117 @@ permalink: /about/
           <a href="{{ site.author.github }}" target="_blank" rel="noopener">↗ GitHub</a>
         {% endif %}
         {% if site.author.email %}
+          <!-- mailto: opens the user's email client with your address pre-filled.
+               {{ site.author.email }} is used as both the href value
+               and the visible link text. -->
           <a href="mailto:{{ site.author.email }}">✉ {{ site.author.email }}</a>
         {% endif %}
       </nav>
+
     </aside>
 
+    <!-- ============================================
+         MAIN BODY
+         The written content of the about page.
+         Styled by .about-body rules in style.css.
+         ============================================ -->
     <div class="about-body">
+
       <h2>About me</h2>
       <p>
-        Hello, I'm Caleb, a Data Analyst based in {{ site.author.location }} with a passion 
-        for transforming data into meaningful insights and practical solutions. I enjoy 
-        uncovering patterns, solving complex problems, and helping businesses make informed 
+        Hello, I'm Caleb, a Data Analyst based in {{ site.author.location }} with a passion
+        for transforming data into meaningful insights and practical solutions. I enjoy
+        uncovering patterns, solving complex problems, and helping businesses make informed
         decisions through clear and effective reporting.
       </p>
       <p>
-        My approach to analytics combines technical expertise with business understanding. 
-        I believe data is most valuable when it tells a story that people can understand and 
-        act upon. Whether I'm building dashboards, analysing trends, or automating processes, 
+        My approach to analytics combines technical expertise with business understanding.
+        I believe data is most valuable when it tells a story that people can understand and
+        act upon. Whether I'm building dashboards, analysing trends, or automating processes,
         my goal is always to create solutions that provide real value and support better decision-making.
       </p>
 
       <h2>What I do</h2>
       <p>
-        I specialise in turning raw data into actionable information through reporting, 
-        visualisation, and automation. My work often involves gathering and transforming data, 
-        designing dashboards, building reporting solutions, and identifying opportunities 
+        I specialise in turning raw data into actionable information through reporting,
+        visualisation, and automation. My work often involves gathering and transforming data,
+        designing dashboards, building reporting solutions, and identifying opportunities
         for improvement through analysis.
       </p>
+      <p>My core areas of expertise include:</p>
+
+      <!-- <ul> is an unordered list — renders as bullet points.
+           Each <li> is a list item.
+           Note: the <ul> is currently wrapped in a <p> tag, which is
+           invalid HTML — a <p> cannot contain a <ul>. Remove the
+           wrapping <p> tags around the list to fix this:
+           Delete the <p> before <ul> and the </p> after </ul> -->
+      <ul>
+        <li>Power BI dashboard development and data visualisation</li>
+        <li>SQL querying, reporting, and data modelling</li>
+        <li>Python scripting and automation</li>
+        <li>Exploratory data analysis and trend identification</li>
+        <li>Business intelligence and performance reporting</li>
+        <li>Data transformation and process optimisation</li>
+      </ul>
+
       <p>
-      My core areas of expertise include:
-      </p>
-      <p>
-        <ul>
-          <li>Power BI dashboard development and data visualisation</li>
-          <li>SQL querying, reporting, and data modelling</li>
-          <li>Python scripting and automation</li>
-          <li>Exploratory data analysis and trend identification</li>
-          <li>Business intelligence and performance reporting</li>
-          <li>Data transformation and process optimisation</li>
-        </ul>
-      </p>
-      <p>
-        I particularly enjoy projects that combine technical problem-solving with business impact, 
+        I particularly enjoy projects that combine technical problem-solving with business impact,
         where insights can directly influence strategy, operations, or performance improvements.
       </p>
 
       <h2>Core Skills</h2>
-
+      <!-- A dot-separated list of skills — simple and scannable.
+           This is a common pattern on portfolios and CVs. -->
       <p>
-        Power BI • SQL • Python • Excel • Data Visualisation • Data Modelling • ETL Processes • Dashboard Design • Reporting Automation • Business Intelligence • Data Analysis • Process Improvement
+        Power BI • SQL • Python • Excel • Data Visualisation • Data Modelling • ETL Processes
+        • Dashboard Design • Reporting Automation • Business Intelligence • Data Analysis
+        • Process Improvement
       </p>
-      
+
       <h2>Background</h2>
       <p>
-        Throughout my career, I have worked with stakeholders across different areas of business 
-        to understand their reporting needs and translate those requirements into practical data 
-        solutions. This has allowed me to develop a strong ability to bridge the gap between technical 
-        data work and business objectives.
+        Throughout my career, I have worked with stakeholders across different areas of business
+        to understand their reporting needs and translate those requirements into practical data
+        solutions. This has allowed me to develop a strong ability to bridge the gap between
+        technical data work and business objectives.
       </p>
-
       <p>
-        I enjoy continuously expanding my knowledge and finding new ways to improve analytical processes. 
-        The field of data is constantly evolving, and I believe that maintaining curiosity and a 
-        willingness to learn are essential for long-term success.
+        I enjoy continuously expanding my knowledge and finding new ways to improve analytical
+        processes. The field of data is constantly evolving, and I believe that maintaining
+        curiosity and a willingness to learn are essential for long-term success.
       </p>
-
       <p>
-        This portfolio showcases projects that demonstrate my analytical thinking, technical skills, 
-        and approach to solving real-world problems using data. Each project represents an opportunity 
-        to explore new techniques, tools, and business challenges.
+        This portfolio showcases projects that demonstrate my analytical thinking, technical
+        skills, and approach to solving real-world problems using data. Each project represents
+        an opportunity to explore new techniques, tools, and business challenges.
       </p>
 
       <h2>Currently Learning</h2>
-
       <p>
-        I am continually developing my skills in data analytics, software development, and automation. 
-        Recent areas of interest include application development with Python, cloud-based data solutions, 
-        advanced analytics techniques, and building end-to-end projects that combine data engineering, 
-        analysis, and visualisation.
+        I am continually developing my skills in data analytics, software development, and
+        automation. Recent areas of interest include application development with Python,
+        cloud-based data solutions, advanced analytics techniques, and building end-to-end
+        projects that combine data engineering, analysis, and visualisation.
       </p>
-      
+
       <h2>Outside work</h2>
       <p>
-        When I'm not working with data, I enjoy staying active through field hockey, 
-        and fitness training. I am also an enthusiastic gamer with a particular interest in 
+        When I'm not working with data, I enjoy staying active through field hockey
+        and fitness training. I am also an enthusiastic gamer with a particular interest in
         strategy, fantasy, and role-playing games.
       </p>
-
       <p>
-        I'm a long-time fan of fantasy worlds such as Lord of the Rings and enjoy games like World of Warcraft 
-        and The Witcher, where storytelling, exploration, and strategic thinking come together. Many of the 
-        same problem-solving and analytical skills that make these hobbies enjoyable are also what drew me 
-        to a career in data.
+        I'm a long-time fan of fantasy worlds such as Lord of the Rings and enjoy games like
+        World of Warcraft and The Witcher, where storytelling, exploration, and strategic
+        thinking come together. Many of the same problem-solving and analytical skills that
+        make these hobbies enjoyable are also what drew me to a career in data.
+      </p>
+      <p>
+        Above all, I enjoy learning new skills, exploring new technologies, and finding
+        opportunities to grow both professionally and personally.
       </p>
 
-      <p>
-        Above all, I enjoy learning new skills, exploring new technologies, and finding opportunities to grow 
-        both professionally and personally.
-      </p>
-      
     </div>
   </div>
 </div>
