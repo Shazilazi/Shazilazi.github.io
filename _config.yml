@@ -1,9 +1,25 @@
-title: "Caleb"
-tagline: "Data Analyst"
-description: "Portfolio showcasing data analytics, visualisation, and insights work."
-url: "https://shazilazi.github.io/"
-baseurl: ""
+# ============================================
+# SITE INFO
+# These values are available anywhere in your
+# templates as {{ site.title }}, {{ site.url }} etc.
+# ============================================
 
+title: "Caleb"               # appears in the browser tab and SEO tags
+tagline: "Data Analyst"      # used in the logo subtitle in your header
+description: "Portfolio showcasing data analytics, visualisation, and insights work."
+                             # used by search engines as the site's meta description
+
+url: "https://shazilazi.github.io/"  # your live domain — important for SEO and absolute links
+baseurl: ""                          # leave empty — only needed if your site lives in a subfolder
+                                     # e.g. github.io/my-portfolio would need baseurl: "/my-portfolio"
+
+# ============================================
+# AUTHOR
+# Available in templates as {{ site.author.name }},
+# {{ site.author.linkedin }} etc.
+# Used in the header logo, about page, footer,
+# and contact page automatically.
+# ============================================
 author:
   name: "Caleb"
   role: "Data Analyst"
@@ -14,35 +30,64 @@ author:
   github: "https://github.com/Shazilazi"
   email: "caleb.trent93@gmail.com"
 
-# Tell Jekyll to process the _pages folder
+# ============================================
+# INCLUDES
+# By default Jekyll ignores folders starting
+# with _ except built-in ones like _layouts.
+# This tells Jekyll to also process _pages/.
+# Without this line your about/projects/contact
+# pages won't be built.
+# ============================================
 include:
   - _pages
 
-# Collections
+# ============================================
+# COLLECTIONS
+# A collection is a group of related files —
+# here, your project write-ups in _projects/.
+# output: true means each .md file gets its
+# own URL (e.g. /projects/sales-dashboard/).
+# permalink defines that URL structure.
+# ============================================
 collections:
   projects:
     output: true
-    permalink: /projects/:name/
+    permalink: /projects/:name/  # :name is replaced by the filename e.g. sales-dashboard
 
+# ============================================
+# DEFAULTS
+# Sets the default layout for files in a given
+# folder, so you don't have to write
+# "layout: default" at the top of every page.
+# ============================================
 defaults:
   - scope:
-      path: "_pages"
+      path: "_pages"       # applies to all files in _pages/
     values:
-      layout: "default"
+      layout: "default"    # uses _layouts/default.html
   - scope:
       path: ""
-      type: "projects"
+      type: "projects"     # applies to all files in the projects collection
     values:
-      layout: "project"
+      layout: "project"    # uses _layouts/project.html
 
-# Build settings
-markdown: kramdown
+# ============================================
+# BUILD SETTINGS
+# ============================================
+markdown: kramdown   # the Markdown parser Jekyll uses to convert .md files to HTML
+                     # kramdown supports tables, footnotes, and other extended syntax
+
 plugins:
-  - jekyll-seo-tag
+  - jekyll-seo-tag   # automatically generates <meta> tags for search engines and
+                     # social sharing (title, description, Open Graph etc)
+                     # the {% seo %} tag in default.html is what triggers it
 
+# ============================================
+# EXCLUDE
+# Files/folders to ignore when building the site.
+# They won't appear in your _site output folder.
+# ============================================
 exclude:
-  - Gemfile
-  - Gemfile.lock
-  - README.md
-
-
+  - Gemfile          # Ruby dependency file — not needed in the built site
+  - Gemfile.lock     # auto-generated lock file — same
+  - README.md        # your repo docs — not part of the site itself
