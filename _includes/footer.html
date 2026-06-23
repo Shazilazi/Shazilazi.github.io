@@ -1,17 +1,49 @@
+<!-- ============================================
+     FOOTER
+     This file is an "include" — a reusable fragment
+     pulled into _layouts/default.html with:
+     {% include footer.html %}
+     It appears at the bottom of every page automatically.
+     ============================================ -->
+
 <footer class="site-footer">
-  <div class="container">
+  <div class="container"> <!-- centres content and constrains width, same as everywhere else -->
+
+    <!-- Your name on the left — pulls from _config.yml author.name -->
     <p class="site-footer__name">{{ site.author.name }}</p>
+
+    <!-- Social/contact links in the middle.
+         Each link is wrapped in {% if %} so it only renders
+         if that value is actually set in _config.yml.
+         If you remove linkedin from _config.yml, the link
+         simply won't appear — no broken or empty links. -->
     <nav class="site-footer__links">
+
       {% if site.author.linkedin %}
+        <!-- target="_blank" opens the link in a new tab.
+             rel="noopener" is a security best practice when using target="_blank" —
+             it prevents the opened page from being able to access your page. -->
         <a href="{{ site.author.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
       {% endif %}
+
       {% if site.author.github %}
         <a href="{{ site.author.github }}" target="_blank" rel="noopener">GitHub</a>
       {% endif %}
+
       {% if site.author.email %}
+        <!-- mailto: is a special link protocol — clicking it opens
+             the user's default email app with your address pre-filled -->
         <a href="mailto:{{ site.author.email }}">Email</a>
       {% endif %}
+
     </nav>
+
+    <!-- Copyright line on the right.
+         'now' | date: "%Y" is a Liquid filter that gets the current
+         date and formats it as just the 4-digit year e.g. "2025".
+         This means the year updates automatically — you never need
+         to manually change it. -->
     <p class="site-footer__copy">© {{ 'now' | date: "%Y" }} {{ site.author.name }}</p>
+
   </div>
 </footer>
