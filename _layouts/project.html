@@ -1,16 +1,50 @@
 ---
 layout: default
 ---
+<!-- This front matter is unusual — a layout using another layout.
+     Jekyll calls this "layout inheritance". The chain is:
+     your project .md file → project.html → default.html
+     So project.html provides the article structure, and
+     default.html wraps it in the full page (head, header, footer). -->
 
+<!-- <article> is a semantic HTML element — it tells browsers and
+     screen readers this is a self-contained piece of content,
+     like a blog post or write-up. Better than a plain <div>
+     because it carries meaning about what the content is. -->
 <article class="project-detail">
+
+  <!-- <header> here is inside the article, not the page header.
+       It's semantic — groups the introductory content of the article
+       (title, date, summary) separately from the body text below. -->
   <header class="project-detail__header">
+
+    <!-- Back navigation — hardcoded to /projects/ since this
+         layout is only ever used by project pages -->
     <a href="/projects/" class="back-link">← All projects</a>
+
+    <!-- Row containing the category badge and the date -->
     <div class="project-detail__meta">
+
+      <!-- page.category comes from the project's front matter
+           e.g. category: "Dashboard" -->
       <span class="tag">{{ page.category }}</span>
+
+      <!-- page.date comes from the filename or front matter.
+           | date: "%B %Y" is a Liquid date filter that formats it
+           as e.g. "September 2024". %B = full month name, %Y = 4-digit year -->
       <span class="project-detail__date">{{ page.date | date: "%B %Y" }}</span>
+
     </div>
+
+    <!-- Project title from front matter -->
     <h1 class="project-detail__title">{{ page.title }}</h1>
+
+    <!-- One-line summary from front matter — shown large above the body -->
     <p class="project-detail__summary">{{ page.summary }}</p>
+
+    <!-- Tool badges row — only renders if tools: is set in front matter.
+         Loops through the array e.g. tools: [Python, SQL, Power BI]
+         and creates a badge for each one. -->
     {% if page.tools %}
     <div class="project-detail__tools">
       {% for tool in page.tools %}
@@ -18,18 +52,34 @@ layout: default
       {% endfor %}
     </div>
     {% endif %}
+
+    <!-- Optional link to the live project or GitHub repo.
+         Only renders if link: is set in the front matter.
+         target="_blank" opens in a new tab.
+         rel="noopener" is the security best practice to go with it. -->
     {% if page.link %}
     <a href="{{ page.link }}" class="btn" target="_blank" rel="noopener">View project →</a>
     {% endif %}
+
   </header>
 
+  <!-- Hero image — only renders if image: is set in the project's front matter.
+       e.g. image: /assets/images/projects/sales-dashboard.png
+       No | relative_url filter here — worth adding for consistency:
+       <img src="{{ page.image | relative_url }}" ... /> -->
   {% if page.image %}
   <div class="project-detail__image">
-    <img src="{{ page.image }}" alt="{{ page.title }}" />
+    <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" />
   </div>
   {% endif %}
 
+  <!-- The written body of the project.
+       {{ content }} here works the same as in default.html —
+       Jekyll inserts the compiled Markdown from the .md file in _projects/.
+       Everything you write below the front matter in a project file
+       ends up here, converted from Markdown to HTML. -->
   <div class="project-detail__body">
     {{ content }}
   </div>
+
 </article>
