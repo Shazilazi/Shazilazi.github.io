@@ -1,55 +1,14 @@
-<!-- ============================================
-     HEADER
-     Pulled into every page via " include header.html "
-     in _layouts/default.html. Contains the logo
-     and main navigation.
-     ============================================ -->
-
 <header class="site-header">
   <div class="container">
-
-    <!-- The logo is a link back to the homepage.
-         '/' | relative_url safely prepends the baseurl if one is ever set.
-         For your site it just outputs '/' but it's good practice. -->
     <a class="site-header__logo" href="{{ '/' | relative_url }}">
-
-      <!-- Your name — pulls from author.name in _config.yml -->
       <span class="logo-name">{{ site.author.name }}</span>
-
-      <!-- "Data Analyst" subtitle — pulls from tagline in _config.yml -->
       <span class="logo-role">{{ site.tagline }}</span>
-
     </a>
-
     <nav class="site-nav">
-
-      <!-- Each nav link uses an inline " if " to check if this is
-           the current page. If it is, class="active" is added, which
-           the CSS uses to make that link appear in full white.
-           page.url is a Jekyll variable — it holds the URL of the
-           page currently being rendered. -->
-
-      <!-- Exact match: only active on the homepage itself -->
-      <a href="{{ '/' | relative_url }}"
-         {% if page.url == '/' %}class="active"{% endif %}>Home</a>
-
-      <!-- Contains match: active on /projects/ AND any individual
-           project page like /projects/sales-dashboard/
-           "contains" checks if the URL includes that string anywhere -->
-      <a href="{{ '/projects/' | relative_url }}"
-         {% if page.url contains '/projects' %}class="active"{% endif %}>Projects</a>
-
-      <!-- Exact match for the about page -->
-      <a href="{{ '/about/' | relative_url }}"
-         {% if page.url == '/about/' %}class="active"{% endif %}>About</a>
-
-      <!-- Contact has no active state check — it's styled as a button
-           instead of a text link, so highlighting it differently
-           when active isn't necessary.
-           btn--nav is a modifier class that makes it slightly smaller
-           than a regular .btn -->
+      <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Home</a>
+      <a href="{{ '/projects/' | relative_url }}" {% if page.url contains '/projects' %}class="active"{% endif %}>Projects</a>
+      <a href="{{ '/about/' | relative_url }}" {% if page.url == '/about/' %}class="active"{% endif %}>About</a>
       <a href="{{ '/contact/' | relative_url }}" class="btn btn--nav">Contact</a>
-
     </nav>
   </div>
 </header>
