@@ -127,8 +127,28 @@ img { max-width: 100%; display: block; }
    HERO
    ============================================ */
 .hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(0,229,168,0.15),
+      transparent 50%
+    );
+
+  pointer-events: none;
+}
+
+/*.hero {
   padding: 7rem 0 5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);*/
 }
 .hero__eyebrow {
   font-family: var(--font-mono);
@@ -151,9 +171,13 @@ img { max-width: 100%; display: block; }
   margin-bottom: 1.5rem;
 }
 .hero__title em {
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(0,229,168,0.4);
+}
+/*.hero__title em {
   font-style: normal;
   color: var(--accent);
-}
+}*/
 .hero__sub {
   font-size: 1.1rem;
   color: var(--muted);
