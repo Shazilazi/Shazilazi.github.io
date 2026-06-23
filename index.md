@@ -1,7 +1,7 @@
----
 <!-- Front matter — tells Jekyll which layout to wrap this page in.
      Jekyll will insert this page's content into _layouts/default.html
      wherever it finds {{ content }} -->
+---
 layout: default
 ---
 
