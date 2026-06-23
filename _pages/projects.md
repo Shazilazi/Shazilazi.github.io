@@ -33,9 +33,6 @@ permalink: /projects/
       {% for project in site.projects %}
 
         <a href="{{ project.url }}" class="project-card">
-          <!-- Note: this is missing | relative_url on the href.
-               Worth adding for consistency:
-               <a href="{{ project.url | relative_url }}" ...> -->
 
           <span class="project-card__category">{{ project.category }}</span>
           <h2 class="project-card__title">{{ project.title }}</h2>
