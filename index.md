@@ -128,7 +128,7 @@ layout: default
             <span>Azure SQL</span>
           </div>
           <div class="skill-icon-item">
-            <i class="devicon-github-plain colored"></i>
+            <i class="devicon-github-plain"></i>
             <span>GitHub</span>
           </div>
         </div>
