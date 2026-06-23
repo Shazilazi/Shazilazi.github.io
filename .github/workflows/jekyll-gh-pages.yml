@@ -1,42 +1,93 @@
+# The display name shown in the Actions tab on GitHub
 name: Deploy Jekyll site to Pages
 
+# ============================================
+# TRIGGERS
+# Defines what causes this workflow to run.
+# ============================================
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
+    branches: ["main"]  # runs automatically whenever you push a commit to main
+  workflow_dispatch:     # also adds a "Run workflow" button in the Actions tab
+                         # so you can trigger a rebuild manually if needed
 
+# ============================================
+# PERMISSIONS
+# What the workflow is allowed to do.
+# GitHub Actions are locked down by default —
+# you have to explicitly grant each permission.
+# ============================================
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: read   # can read your repo files (needed to build the site)
+  pages: write     # can write to GitHub Pages (needed to deploy)
+  id-token: write  # allows secure authentication between jobs without passwords
 
+# ============================================
+# CONCURRENCY
+# Prevents two deployments running at the same time
+# if you push two commits in quick succession.
+# ============================================
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: false  # if a deploy is already running, wait for it to finish
+                              # rather than cancelling it (safer for deployments)
 
+# ============================================
+# JOBS
+# The actual work. Split into two jobs:
+# "build" compiles the site, "deploy" publishes it.
+# Splitting them is a GitHub Pages requirement.
+# ============================================
 jobs:
+
+  # ----------------------------------------
+  # JOB 1: BUILD
+  # Checks out your code and compiles the
+  # Jekyll site into static HTML files.
+  # ----------------------------------------
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # runs on a fresh Ubuntu virtual machine hosted by GitHub
+
     steps:
+      # Downloads your repo files onto the virtual machine
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # @v4 pins the version — safer than always using latest
+
+      # Configures the GitHub Pages environment
+      # (sets the correct base URL etc)
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      # Runs Jekyll to compile your _layouts, _includes,
+      # _projects and pages into plain HTML in the _site/ folder
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
-          destination: ./_site
+          source: ./       # where your source files are (root of the repo)
+          destination: ./_site  # where the compiled site is output to
+
+      # Packages the _site/ folder so it can be
+      # passed to the deploy job
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
+  # ----------------------------------------
+  # JOB 2: DEPLOY
+  # Takes the built site and publishes it.
+  # Runs after build completes — won't start
+  # if the build job fails.
+  # ----------------------------------------
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}  # the live URL, shown in the Actions log
+                                                      # ${{ }} is GitHub Actions syntax for
+                                                      # reading a variable at runtime
+
     runs-on: ubuntu-latest
-    needs: build
+    needs: build  # waits for the build job to finish successfully before starting
+
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        id: deployment  # gives this step an id so its output (the URL) can be referenced above
+        uses: actions/deploy-pages@v4  # takes the artifact from the build job and publishes it
