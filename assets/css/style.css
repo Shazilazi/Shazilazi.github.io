@@ -166,7 +166,7 @@ body::before {
   pointer-events: none;
 }*/
 
-.hero {
+/*.hero {
   position: relative;
   overflow: hidden;
 }
@@ -184,11 +184,11 @@ body::before {
     );
 
   pointer-events: none;
-}
+}*/
 
-/*.hero {
+.hero {
   padding: 7rem 0 5rem;
-  border-bottom: 1px solid var(--border);*/
+  border-bottom: 1px solid var(--border);
 }
 .hero__eyebrow {
   font-family: var(--font-mono);
