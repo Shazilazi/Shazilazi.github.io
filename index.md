@@ -80,7 +80,7 @@ layout: default
 
       <!-- Liquid: checks if any featured projects exist before rendering the grid.
            Avoids showing an empty grid if no projects are marked featured yet. -->
-      {% if featured.size > 0 %}
+      {% if featured != empty %}
 
         <!-- Loops through featured projects, maximum 3 shown -->
         {% for project in featured limit:3 %}
