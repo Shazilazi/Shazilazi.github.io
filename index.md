@@ -88,7 +88,7 @@ layout: default
           <a href="{{ project.url | relative_url }}" class="project-card">
 
             <!-- Only renders the image block if the project has an image set.
-                 The {% if %} tag is Liquid — it checks the condition and skips
+                 The " if " tag is Liquid — it checks the condition and skips
                  the block entirely if false, leaving no empty space in the HTML. -->
             {% if project.image %}
               <div class="project-card__image">
