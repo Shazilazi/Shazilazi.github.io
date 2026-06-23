@@ -1,39 +1,64 @@
 ---
+# layout: wraps this page in default.html (head, header, footer)
+# title: appears in the browser tab as "Contact · Caleb"
+# permalink: the exact URL — matches the href in your header nav
 layout: default
 title: Contact
 permalink: /contact/
 ---
 
+<!-- .contact-page is a narrow centred container defined in style.css
+     (max-width: 560px) — narrower than the main container because
+     this page only needs to hold a heading and a few link cards -->
 <div class="contact-page">
-  <h1>Get in touch</h1>
-  <p>Open to freelance projects, full-time roles, and interesting problems. Reach out via any of the channels below.</p>
 
+  <h1>Get in touch</h1>
+
+  <!-- Intro sentence — sets expectations about what you're open to -->
+  <p>Open to freelance projects, full-time roles, and interesting problems.
+     Reach out via any of the channels below.</p>
+
+  <!-- Stacked column of clickable contact cards -->
   <div class="contact-links">
+
+    <!-- EMAIL CARD
+         {% if %} checks _config.yml before rendering —
+         if you ever remove the email, this card disappears cleanly -->
     {% if site.author.email %}
     <a href="mailto:{{ site.author.email }}" class="contact-link">
+      <!-- mailto: opens the user's default email app
+           with your address already filled in -->
       <div>
-        <div class="contact-link__label">Email</div>
-        <div>{{ site.author.email }}</div>
+        <div class="contact-link__label">Email</div> <!-- small label above -->
+        <div>{{ site.author.email }}</div>            <!-- the actual address -->
       </div>
     </a>
     {% endif %}
 
+    <!-- LINKEDIN CARD
+         target="_blank" opens in a new tab so the user doesn't
+         navigate away from your portfolio.
+         rel="noopener" is the security best practice to pair with it. -->
     {% if site.author.linkedin %}
     <a href="{{ site.author.linkedin }}" class="contact-link" target="_blank" rel="noopener">
       <div>
         <div class="contact-link__label">LinkedIn</div>
+        <!-- Hardcoded display text — shows a clean readable URL
+             rather than the full https:// version from _config.yml -->
         <div>linkedin.com/in/caleb-trent-aa6ba915a/</div>
       </div>
     </a>
     {% endif %}
 
+    <!-- GITHUB CARD -->
     {% if site.author.github %}
     <a href="{{ site.author.github }}" class="contact-link" target="_blank" rel="noopener">
       <div>
         <div class="contact-link__label">GitHub</div>
-        <div>github.com/Shazilazi</div>
+        <div>{{ site.author.github | remove: "https://" }}</div>
       </div>
     </a>
     {% endif %}
+
   </div>
 </div>
