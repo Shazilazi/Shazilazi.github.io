@@ -1,45 +1,71 @@
 /* ============================================
    TOKENS
+   These are CSS custom properties (variables).
+   Defining colours and fonts here once means
+   you only need to change them in one place to
+   update the whole site's look. Referenced
+   elsewhere as var(--name).
    ============================================ */
 :root {
-  --bg:         #0F1117;
-  --surface:    #181C27;
-  --border:     #252A38;
-  --text:       #E2E6F0;
-  --muted:      #6B7590;
-  --accent:     #4F8EF7;
-  --accent-dim: rgba(79, 142, 247, 0.12);
+  --bg:         #13111C;  /* main page background — darkest layer */
+  --surface:    #1E1A2E;  /* slightly lighter — used for cards and panels */
+  --border:     #2D2847;  /* subtle lines that separate sections/cards */
+  --text:       #EDE9F6;  /* primary readable text — off-white with a purple tint */
+  --muted:      #7C6FA0;  /* secondary text — less important info, labels */
+  --accent:     #7C3AED;  /* brand colour — buttons, links, highlights */
+  --accent-dim: rgba(124, 58, 237, 0.12); /* very faint accent used for tag backgrounds */
 
-  --font-mono: 'IBM Plex Mono', monospace;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace; /* code-style font — used for labels and the logo */
+  --font-sans: 'Inter', system-ui, sans-serif; /* main readable font for body text */
 
-  --radius: 6px;
-  --max-w: 1080px;
+  --radius: 6px;     /* how rounded card/button corners are */
+  --max-w: 1080px;   /* maximum width the content will stretch to */
 }
 
 /* ============================================
    RESET
+   Browsers apply their own default styles to
+   elements (margins, padding, font sizes etc).
+   This reset removes those defaults so every
+   browser starts from the same blank slate.
    ============================================ */
+
+/* Apply border-box sizing to everything —
+   means padding/border are included in an
+   element's width, not added on top of it */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Base font size and smooth scrolling when
+   jumping to anchor links (#section) */
 html { font-size: 16px; scroll-behavior: smooth; }
+
 body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
+  line-height: 1.7;                  /* space between lines of text — 1.7 is comfortable for reading */
+  -webkit-font-smoothing: antialiased; /* makes text look crisper on Mac/iOS screens */
 }
+
+/* Default link style — accent colour, no underline until hover */
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+/* Prevents images from ever overflowing their container.
+   display: block removes the small gap that appears
+   below inline images. */
 img { max-width: 100%; display: block; }
 
 /* ============================================
    LAYOUT
+   .container is a reusable wrapper that centres
+   content and adds padding on the sides.
+   Used on almost every section.
    ============================================ */
 .container {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  max-width: var(--max-w); /* won't grow wider than 1080px */
+  margin: 0 auto;          /* auto left/right margin centres it horizontally */
+  padding: 0 1.5rem;       /* side padding so content doesn't touch the screen edge on mobile */
 }
 
 /* ============================================
@@ -48,81 +74,103 @@ img { max-width: 100%; display: block; }
 .site-header {
   border-bottom: 1px solid var(--border);
   padding: 1.25rem 0;
-  position: sticky;
-  top: 0;
-  background: rgba(15, 17, 23, 0.92);
-  backdrop-filter: blur(8px);
-  z-index: 100;
+  position: sticky;               /* sticks to the top of the screen as you scroll */
+  top: 0;                         /* anchors it to the very top */
+  background: rgba(15, 17, 23, 0.92); /* slightly transparent so content scrolls "under" it */
+  backdrop-filter: blur(8px);     /* frosted glass effect — blurs whatever is behind the header */
+  z-index: 100;                   /* keeps the header above all other page content */
 }
+
+/* Makes the logo and nav sit side by side with space between them */
 .site-header .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex;           /* flex puts children in a row by default */
+  align-items: center;     /* vertically centres the logo and nav */
+  justify-content: space-between; /* pushes logo to left, nav to right */
   gap: 2rem;
 }
+
+/* The logo is a link containing two lines of text stacked vertically */
 .site-header__logo {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* stacks children vertically (name above role) */
   gap: 0.1rem;
   text-decoration: none;
 }
+
+/* Your name in the logo — monospace font gives a code/terminal feel */
 .logo-name {
   font-family: var(--font-mono);
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--text);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.01em; /* tightens letter spacing slightly for a polished look */
 }
+
+/* "Data Analyst" subtitle under your name in the logo */
 .logo-role {
   font-size: 0.7rem;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.1em;  /* spaced out letters — common for small uppercase labels */
   font-family: var(--font-mono);
 }
+
+/* Nav links sit in a horizontal row */
 .site-nav {
   display: flex;
   align-items: center;
   gap: 2rem;
 }
+
 .site-nav a {
-  color: var(--muted);
+  color: var(--muted);       /* dimmer than main text — nav links are secondary */
   font-size: 0.875rem;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: color 0.2s;    /* smooth colour change on hover instead of instant jump */
   text-decoration: none;
 }
+
+/* Both hovered AND active (current page) links turn full white */
 .site-nav a:hover,
 .site-nav a.active { color: var(--text); }
 
 /* ============================================
    BUTTONS
+   .btn is the base button style.
+   .btn--nav is a smaller variant used in the header.
    ============================================ */
 .btn {
-  display: inline-block;
+  display: inline-block;       /* lets padding work correctly on a link element */
   padding: 0.5rem 1.1rem;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--accent); /* outlined style — accent colour border */
   color: var(--accent);
   border-radius: var(--radius);
   font-size: 0.875rem;
   font-weight: 500;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s; /* smoothly fills in on hover */
   text-decoration: none;
 }
+
+/* On hover: fills with accent colour, text turns white */
 .btn:hover {
   background: var(--accent);
   color: #fff;
   text-decoration: none;
 }
+
+/* Slightly smaller padding for the nav button */
 .btn--nav { padding: 0.4rem 1rem; }
 
 /* ============================================
    HERO
+   The large opening section at the top of the homepage.
    ============================================ */
 .hero {
-  padding: 7rem 0 5rem;
+  padding: 7rem 0 5rem; /* lots of top padding to give the headline breathing room */
   border-bottom: 1px solid var(--border);
 }
+
+/* Small label above the main headline — e.g. "Data Analytics Portfolio" */
 .hero__eyebrow {
   font-family: var(--font-mono);
   font-size: 0.8rem;
@@ -131,42 +179,60 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
   margin-bottom: 1.5rem;
 }
+
+/* Adds "> " before the eyebrow text using a CSS pseudo-element.
+   ::before inserts content before the element without touching the HTML. */
 .hero__eyebrow::before {
-  content: '> ';
-  opacity: 0.5;
+  content: '> ';  /* the text to insert — mimics a terminal prompt */
+  opacity: 0.5;   /* slightly faded so it doesn't compete with the label */
 }
+
+/* The main headline — clamp() makes the font size fluid:
+   min 2.2rem on small screens, max 3.8rem on large,
+   scaling smoothly in between based on viewport width (5vw) */
 .hero__title {
   font-size: clamp(2.2rem, 5vw, 3.8rem);
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  max-width: 16ch;
+  line-height: 1.15;       /* tighter line height for large display text */
+  letter-spacing: -0.03em; /* slightly tighter tracking — looks better at large sizes */
+  max-width: 16ch;         /* ch unit = width of the "0" character — limits line length */
   margin-bottom: 1.5rem;
 }
+
+/* <em> inside the title is used for the accent-coloured word.
+   font-style: normal removes the default italic that <em> adds. */
 .hero__title em {
   font-style: normal;
   color: var(--accent);
 }
+
+/* Subtitle paragraph under the headline */
 .hero__sub {
   font-size: 1.1rem;
   color: var(--muted);
-  max-width: 52ch;
+  max-width: 52ch; /* keeps the line length comfortable to read */
   margin-bottom: 2.5rem;
   line-height: 1.8;
 }
+
+/* The two CTA buttons sit side by side, wrapping on small screens */
 .hero__cta {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* wraps to a second line if screen is too narrow */
 }
+
+/* The stats row (e.g. "12+ Projects") at the bottom of the hero */
 .hero__stats {
   display: flex;
   gap: 3rem;
   margin-top: 4rem;
   padding-top: 3rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border); /* visual separator between hero content and stats */
   flex-wrap: wrap;
 }
+
+/* The large number in each stat */
 .stat__number {
   font-family: var(--font-mono);
   font-size: 2rem;
@@ -174,6 +240,8 @@ img { max-width: 100%; display: block; }
   color: var(--text);
   line-height: 1;
 }
+
+/* The label beneath each number */
 .stat__label {
   font-size: 0.8rem;
   color: var(--muted);
@@ -184,19 +252,25 @@ img { max-width: 100%; display: block; }
 
 /* ============================================
    SECTION
+   Reusable wrapper for each content section
+   (Projects, Skills etc).
    ============================================ */
 .section {
   padding: 5rem 0;
   border-bottom: 1px solid var(--border);
 }
+
+/* Section header row — title on the left, "View all →" link on the right */
 .section__header {
   display: flex;
-  align-items: baseline;
+  align-items: baseline; /* aligns text along their text baseline */
   justify-content: space-between;
   margin-bottom: 3rem;
   flex-wrap: wrap;
   gap: 1rem;
 }
+
+/* Small monospace label used as a section title e.g. "Featured projects" */
 .section__title {
   font-family: var(--font-mono);
   font-size: 0.8rem;
@@ -207,29 +281,39 @@ img { max-width: 100%; display: block; }
 
 /* ============================================
    PROJECT CARDS
+   The grid of clickable project cards.
    ============================================ */
+
+/* auto-fill + minmax creates a responsive grid:
+   as many columns as fit, each at least 300px wide.
+   No media queries needed — it adjusts automatically. */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 }
+
 .project-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.75rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* stacks card content vertically */
   gap: 0.75rem;
   transition: border-color 0.2s, transform 0.2s;
   text-decoration: none;
-  color: inherit;
+  color: inherit; /* prevents the link from turning the text accent-coloured */
 }
+
+/* On hover: border lights up and card lifts slightly */
 .project-card:hover {
   border-color: var(--accent);
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* moves card 2px upward — the "lift" effect */
   text-decoration: none;
 }
+
+/* Small category label e.g. "Dashboard" at the top of the card */
 .project-card__category {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -237,18 +321,23 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+
 .project-card__title {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text);
   line-height: 1.3;
 }
+
 .project-card__summary {
   font-size: 0.875rem;
   color: var(--muted);
   line-height: 1.6;
-  flex: 1;
+  flex: 1; /* flex: 1 makes this grow to fill available space,
+              pushing the tool badges to the bottom of the card */
 }
+
+/* Tool badge row at the bottom of each card */
 .project-card__tools {
   display: flex;
   flex-wrap: wrap;
@@ -258,44 +347,55 @@ img { max-width: 100%; display: block; }
 
 /* ============================================
    TAGS & BADGES
+   Used for tool names and categories throughout.
+   Both .tag and .tool-badge share the same style.
    ============================================ */
 .tag, .tool-badge {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   padding: 0.2rem 0.6rem;
   border-radius: 3px;
-  background: var(--accent-dim);
+  background: var(--accent-dim); /* very faint purple tint background */
   color: var(--accent);
   letter-spacing: 0.04em;
 }
 
 /* ============================================
    SKILL ICONS
+   Each skill is a small card with an icon above
+   a label, arranged in a flex row.
    ============================================ */
 .skill-icon-item {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; /* icon stacked above label */
+  align-items: center;    /* centres both icon and label horizontally */
   gap: 0.4rem;
   padding: 0.75rem 0.6rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  min-width: 70px;
+  min-width: 70px;        /* prevents cards from getting too narrow */
   transition: border-color 0.2s;
 }
+
 .skill-icon-item:hover { border-color: var(--accent); }
+
+/* The Devicon <i> element — font-size controls the icon's visual size */
 .skill-icon-item i {
   font-size: 1.6rem;
   line-height: 1;
 }
+
+/* The text label beneath each icon */
 .skill-icon-item span {
   font-size: 0.68rem;
   color: var(--muted);
   font-family: var(--font-mono);
   text-align: center;
-  white-space: nowrap;
+  white-space: nowrap; /* prevents the label wrapping to two lines */
 }
+
+/* The row of skill icon cards within each group */
 .skill-group__items {
   display: flex;
   flex-wrap: wrap;
@@ -304,27 +404,36 @@ img { max-width: 100%; display: block; }
 
 /* ============================================
    PROJECT CARD IMAGE
+   The thumbnail image at the top of a project card.
+   The negative margins are a trick to make the image
+   stretch edge-to-edge despite the card's padding.
    ============================================ */
 .project-card__image {
+  /* calc() lets you mix units — adds back the 1.75rem padding on each side */
   width: calc(100% + 3.5rem);
+  /* negative margins pull the image outside the card's padding on all three sides */
   margin: -1.75rem -1.75rem 1rem -1.75rem;
-  overflow: hidden;
-  border-radius: var(--radius) var(--radius) 0 0;
-  aspect-ratio: 16 / 9;
-  background: var(--border);
+  overflow: hidden; /* clips the image to the rounded corners */
+  border-radius: var(--radius) var(--radius) 0 0; /* only rounds the top two corners */
+  aspect-ratio: 16 / 9; /* locks the image to widescreen proportions regardless of size */
+  background: var(--border); /* placeholder colour shown while the image loads */
 }
+
 .project-card__image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* crops the image to fill the box without stretching it */
   transition: transform 0.3s ease;
 }
+
+/* Image zooms in slightly when the card is hovered */
 .project-card:hover .project-card__image img {
   transform: scale(1.03);
 }
 
 /* ============================================
    PROJECT DETAIL IMAGE
+   Full-width image on an individual project page.
    ============================================ */
 .project-detail__image {
   margin: 2rem 0;
@@ -334,6 +443,7 @@ img { max-width: 100%; display: block; }
   aspect-ratio: 16 / 9;
   background: var(--surface);
 }
+
 .project-detail__image img {
   width: 100%;
   height: 100%;
@@ -342,12 +452,15 @@ img { max-width: 100%; display: block; }
 
 /* ============================================
    SKILLS GRID
+   Four-column responsive grid for skill groups.
    ============================================ */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
 }
+
+/* Label above each skill group e.g. "Languages" */
 .skill-group__label {
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -358,75 +471,98 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================
+   ABOUT PAGE
+   Two-column layout: sidebar on the left,
+   main content on the right.
    ============================================ */
 .about-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2fr; /* sidebar takes 1 part, content takes 2 parts */
   gap: 5rem;
   padding: 5rem 0;
-  align-items: start;
+  align-items: start; /* prevents the sidebar stretching to match the content height */
 }
+
 .about-sidebar__name {
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
+
 .about-sidebar__role {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--accent);
   margin-bottom: 1.5rem;
 }
+
+/* Sidebar links (LinkedIn, GitHub, email) stacked vertically */
 .about-sidebar__links {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
 }
+
 .about-sidebar__links a {
   font-size: 0.875rem;
   color: var(--muted);
 }
 .about-sidebar__links a:hover { color: var(--text); }
+
+/* Headings inside the about body text */
 .about-body h2 {
   font-size: 1.4rem;
   font-weight: 600;
-  margin: 2.5rem 0 1rem;
+  margin: 2.5rem 0 1rem; /* space above and below each heading */
   letter-spacing: -0.02em;
 }
+
+/* Removes the top margin from the very first h2 */
 .about-body h2:first-child { margin-top: 0; }
+
 .about-body p {
   color: var(--muted);
   margin-bottom: 1rem;
   font-size: 0.975rem;
 }
+
 .about-body a { color: var(--accent); }
 
 /* ============================================
    PROJECT DETAIL
+   The individual project page layout —
+   narrower than the homepage for comfortable reading.
    ============================================ */
 .project-detail {
-  max-width: 720px;
-  margin: 0 auto;
+  max-width: 720px; /* reading width — narrower than the full container */
+  margin: 0 auto;   /* centres it */
   padding: 4rem 1.5rem;
 }
+
+/* "← All projects" back navigation link */
 .back-link {
   font-size: 0.875rem;
   color: var(--muted);
-  display: block;
+  display: block; /* block so it sits on its own line */
   margin-bottom: 2rem;
 }
 .back-link:hover { color: var(--text); text-decoration: none; }
+
+/* Row containing the category tag and date */
 .project-detail__meta {
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
 }
+
 .project-detail__date {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--muted);
 }
+
+/* Project title — fluid size like the hero headline */
 .project-detail__title {
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   font-weight: 600;
@@ -434,41 +570,52 @@ img { max-width: 100%; display: block; }
   line-height: 1.2;
   margin-bottom: 1rem;
 }
+
 .project-detail__summary {
   font-size: 1.05rem;
   color: var(--muted);
   margin-bottom: 1.5rem;
 }
+
+/* Row of tool badges below the summary */
 .project-detail__tools {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
   margin-bottom: 2rem;
 }
+
+/* The main written body of the project — separated by a top border */
 .project-detail__body {
   border-top: 1px solid var(--border);
   padding-top: 2.5rem;
   margin-top: 2.5rem;
 }
+
 .project-detail__body h2 {
   font-size: 1.2rem;
   font-weight: 600;
   margin: 2rem 0 0.75rem;
 }
+
 .project-detail__body p {
   color: var(--muted);
   margin-bottom: 1rem;
   font-size: 0.975rem;
 }
+
 .project-detail__body ul {
   color: var(--muted);
-  padding-left: 1.5rem;
+  padding-left: 1.5rem; /* indents the bullet points */
   margin-bottom: 1rem;
 }
+
 .project-detail__body li { margin-bottom: 0.4rem; font-size: 0.975rem; }
+
+/* Inline code snippets e.g. `pandas` — styled with accent colour */
 .project-detail__body code {
   font-family: var(--font-mono);
-  font-size: 0.85em;
+  font-size: 0.85em;  /* em is relative to the parent font size */
   background: var(--surface);
   padding: 0.15em 0.4em;
   border-radius: 3px;
@@ -477,27 +624,34 @@ img { max-width: 100%; display: block; }
 
 /* ============================================
    CONTACT PAGE
+   Narrow centred layout with stacked link cards.
    ============================================ */
 .contact-page {
   max-width: 560px;
   margin: 0 auto;
   padding: 5rem 1.5rem;
 }
+
 .contact-page h1 {
   font-size: 2rem;
   font-weight: 600;
   letter-spacing: -0.03em;
   margin-bottom: 0.75rem;
 }
+
 .contact-page p {
   color: var(--muted);
   margin-bottom: 2rem;
 }
+
+/* Stacks the contact link cards vertically */
 .contact-links {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
+/* Each contact method (email, LinkedIn etc) is a clickable card */
 .contact-link {
   display: flex;
   align-items: center;
@@ -511,10 +665,13 @@ img { max-width: 100%; display: block; }
   font-size: 0.9rem;
   transition: border-color 0.2s;
 }
+
 .contact-link:hover {
   border-color: var(--accent);
   text-decoration: none;
 }
+
+/* Small label above the contact value e.g. "Email" above the address */
 .contact-link__label { color: var(--muted); font-size: 0.75rem; font-family: var(--font-mono); }
 
 /* ============================================
@@ -524,27 +681,34 @@ img { max-width: 100%; display: block; }
   padding: 3rem 0;
   border-top: 1px solid var(--border);
 }
+
+/* Name, links and copyright sit in a row with space between */
 .site-footer .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* wraps to multiple lines on small screens */
   gap: 1rem;
 }
+
 .site-footer__name {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--muted);
 }
+
 .site-footer__links {
   display: flex;
   gap: 1.5rem;
 }
+
 .site-footer__links a {
   font-size: 0.875rem;
   color: var(--muted);
 }
 .site-footer__links a:hover { color: var(--text); text-decoration: none; }
+
+/* Copyright text — uses --border colour so it's very faint */
 .site-footer__copy {
   font-size: 0.8rem;
   color: var(--border);
@@ -553,17 +717,28 @@ img { max-width: 100%; display: block; }
 
 /* ============================================
    RESPONSIVE
+   @media rules apply styles only when certain
+   conditions are met — here, screen width.
+   These override the styles above at smaller sizes.
    ============================================ */
+
+/* Tablet and below (768px) */
 @media (max-width: 768px) {
-  .about-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .hero { padding: 4rem 0 3rem; }
+  .about-layout { grid-template-columns: 1fr; gap: 2rem; } /* sidebar stacks above content */
+  .hero { padding: 4rem 0 3rem; }  /* less padding on smaller screens */
   .hero__stats { gap: 2rem; }
   .site-nav { gap: 1.25rem; }
   .site-footer .container { flex-direction: column; align-items: flex-start; }
 }
+
+/* Mobile (480px) — hides text nav links, keeps only the Contact button */
 @media (max-width: 480px) {
   .site-nav a:not(.btn--nav) { display: none; }
+  /* :not(.btn--nav) means "all nav links EXCEPT the one with the btn--nav class" */
 }
+
+/* Respects the user's OS-level "reduce motion" accessibility setting.
+   Removes all transitions and animations sitewide if enabled. */
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
