@@ -136,6 +136,25 @@ img { max-width: 100%; display: block; }
   position: absolute;
   inset: 0;
 
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+  background-size: 40px 40px;
+
+  pointer-events: none;
+}
+
+/*.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
   background:
     radial-gradient(
       circle at top right,
@@ -144,7 +163,7 @@ img { max-width: 100%; display: block; }
     );
 
   pointer-events: none;
-}
+}*/
 
 /*.hero {
   padding: 7rem 0 5rem;
@@ -172,7 +191,7 @@ img { max-width: 100%; display: block; }
 }
 .hero__title em {
   color: var(--accent);
-  text-shadow: 0 0 20px rgba(0,229,168,0.4);
+  text-shadow: 0 0 80px rgba(0,229,168,0.4);
 }
 /*.hero__title em {
   font-style: normal;
