@@ -2,15 +2,15 @@
    TOKENS
    ============================================ */
 :root {
-  --bg:         #08120E;
-  --surface:    #10211A;
-  --border:     #1D3A2E;
+  --bg:         #0A0E17;
+  --surface:    #111827;
+  --border:     #1F2937;
 
-  --text:       #F5FFF8;
-  --muted:      #93B8A3;
+  --text:       #F8FAFC;
+  --muted:      #94A3B8;
 
-  --accent:     #3DDC97;
-  --accent-dim: rgba(61,220,151,0.12);
+  --accent:     #00E5A8;
+  --accent-dim: rgba(0,229,168,0.12);
 
    --font-mono: 'IBM Plex Mono', monospace;--font-sans: 'Inter', system-ui, sans-serif;
    --radius: 6px;--max-w: 1080px;
