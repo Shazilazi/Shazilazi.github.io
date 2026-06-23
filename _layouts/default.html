@@ -1,25 +1,91 @@
 <!DOCTYPE html>
+<!-- Tells the browser this is an HTML5 document —
+     always the first line of any HTML file -->
+
 <html lang="en">
+<!-- lang="en" tells browsers and screen readers
+     the page content is in English -->
+
 <head>
+  <!-- The <head> contains metadata — information ABOUT the page
+       rather than content shown to the user.
+       Nothing in here is visible on the page itself. -->
+
+  <!-- Tells the browser to use UTF-8 character encoding —
+       supports all standard characters including symbols and accents -->
   <meta charset="UTF-8" />
+
+  <!-- Makes the page responsive on mobile.
+       Without this, phones render the page at desktop width and zoom out.
+       width=device-width: match the screen width.
+       initial-scale=1.0: don't zoom in or out by default. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} · {{ site.tagline }}{% endif %}</title>
+
+  <!-- Page title shown in the browser tab and search engine results.
+       Liquid conditional: if this page has its own title set in front matter,
+       show "Page Title · Caleb", otherwise fall back to "Caleb · Data Analyst".
+       The · is just a visual separator. -->
+  <title>
+    {% if page.title %}
+      {{ page.title }} · {{ site.title }}
+    {% else %}
+      {{ site.title }} · {{ site.tagline }}
+    {% endif %}
+  </title>
+
+  <!-- Meta description used by search engines as the snippet under your
+       page title in results. | default: falls back to the site-wide
+       description from _config.yml if the page doesn't set its own. -->
   <meta name="description" content="{{ page.description | default: site.description }}" />
+
+  <!-- These two lines speed up Google Fonts loading.
+       rel="preconnect" tells the browser to open a connection to those
+       domains early, before it's actually needed, reducing load time. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Loads the two fonts used across the site:
+       IBM Plex Mono (weights 400 and 600) — used for labels, logo, code
+       Inter (weights 400, 500, 600) — used for all body text
+       display=swap means text shows in a fallback font immediately,
+       then swaps to the custom font once it loads — avoids invisible text -->
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Your main stylesheet — all the CSS you've been editing.
+       | relative_url safely handles the baseurl if one is ever set. -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+
+  <!-- Devicon icon font — provides all the tool/language icons
+       in your skills section (Python, Pandas, VS Code etc).
+       Loaded from jsDelivr CDN so no file needed in your repo. -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
+  <!-- Jekyll SEO Tag plugin — outputs a block of <meta> tags for
+       search engines and social sharing (Open Graph for LinkedIn,
+       Twitter cards etc). Controlled by the plugin defined in
+       Gemfile and _config.yml. Must be last in <head>
+       so it can read all the page variables set above. -->
   {% seo %}
+
 </head>
+
 <body>
 
+  <!-- Pulls in _includes/header.html — the sticky nav at the top.
+       Jekyll replaces this tag with the full contents of that file
+       at build time. -->
   {% include header.html %}
 
+  <!-- The main content area.
+       {{ content }} is a special Jekyll variable — it's replaced with
+       the compiled output of whichever page is using this layout.
+       For example, when rendering about.html, everything in that file
+       below the front matter gets inserted here. -->
   <main>
     {{ content }}
   </main>
 
+  <!-- Pulls in _includes/footer.html — the footer at the bottom -->
   {% include footer.html %}
 
 </body>
