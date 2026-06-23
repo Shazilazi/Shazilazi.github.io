@@ -65,8 +65,6 @@ layout: default
 
   <!-- Hero image — only renders if image: is set in the project's front matter.
        e.g. image: /assets/images/projects/sales-dashboard.png
-       No | relative_url filter here — worth adding for consistency:
-       <img src="{{ page.image | relative_url }}" ... /> -->
   {% if page.image %}
   <div class="project-detail__image">
     <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" />
