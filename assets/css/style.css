@@ -37,8 +37,7 @@ a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 img { max-width: 100%; display: block; }
 
-/* Ambient background glow — fixed so it doesn't scroll with the page.
-   Top-right uses primary teal, bottom-left uses secondary cyan. */
+/* Ambient background glow */
 body::before {
   content: "";
   position: fixed;
@@ -49,6 +48,43 @@ body::before {
   pointer-events: none;
   z-index: -1;
 }
+
+/* ============================================
+   SCROLL PROGRESS BAR
+   Fixed teal line on the left edge of the
+   viewport that grows as the user scrolls.
+   Height is driven by JS (--scroll-pct).
+   ============================================ */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: calc(var(--scroll-pct, 0) * 1%);
+  background: linear-gradient(to bottom, var(--accent), var(--accent2));
+  z-index: 999;
+  transition: height 0.1s linear;
+}
+
+/* ============================================
+   SCROLL FADE-IN
+   Elements with .reveal start invisible and
+   slide up. JS adds .reveal--visible when they
+   enter the viewport.
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal--delay-1 { transition-delay: 0.1s; }
+.reveal--delay-2 { transition-delay: 0.2s; }
+.reveal--delay-3 { transition-delay: 0.3s; }
 
 /* ============================================
    LAYOUT
@@ -146,8 +182,31 @@ body::before {
    ============================================ */
 .hero {
   padding: 7rem 0 5rem;
-  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
 }
+
+/* Subtle dot grid behind the hero */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* Gradient section divider — replaces the plain border-bottom */
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent), var(--accent2), transparent);
+}
+
 .hero__eyebrow {
   font-family: var(--font-mono);
   font-size: 0.8rem;
@@ -155,11 +214,25 @@ body::before {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 .hero__eyebrow::before {
   content: '> ';
   opacity: 0.5;
 }
+
+/* Blinking terminal cursor after the eyebrow text */
+.hero__eyebrow::after {
+  content: '▋';
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 .hero__title {
   font-size: clamp(2.2rem, 5vw, 3.8rem);
   font-weight: 600;
@@ -167,6 +240,7 @@ body::before {
   letter-spacing: -0.03em;
   max-width: 16ch;
   margin-bottom: 1.5rem;
+  min-height: 2.5em;
 }
 .hero__title em {
   font-style: normal;
@@ -213,8 +287,23 @@ body::before {
    ============================================ */
 .section {
   padding: 5rem 0;
-  border-bottom: 1px solid var(--border);
+  position: relative;
 }
+
+/* Gradient divider at the bottom of each section */
+.section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+
+/* Override for the last section — no divider needed */
+.section:last-of-type::after { display: none; }
+
 .section__header {
   display: flex;
   align-items: baseline;
@@ -256,24 +345,53 @@ body::before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+  counter-reset: project-counter;
 }
 .project-card {
   background: var(--surface);
   border: 1px solid var(--border);
+  border-left: 3px solid transparent;
   border-radius: var(--radius);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   text-decoration: none;
   color: inherit;
+  position: relative;
+  counter-increment: project-counter;
 }
 .project-card:hover {
-  border-color: var(--accent);
+  border-color: var(--border);
+  border-left-color: var(--accent);
   transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 229, 168, 0.08);
   text-decoration: none;
 }
+
+/* Large faint number behind the card content */
+.project-card::before {
+  content: counter(project-counter, decimal-leading-zero);
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--border);
+  line-height: 1;
+  pointer-events: none;
+  transition: color 0.2s;
+  z-index: 0;
+}
+.project-card:hover::before {
+  color: var(--accent-dim);
+}
+
+/* Ensure card content sits above the number */
+.project-card > * { position: relative; z-index: 1; }
+
 .project-card__category {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -322,7 +440,7 @@ body::before {
   align-items: center;
   gap: 0.4rem;
   padding: 0.75rem 0.6rem;
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   min-width: 70px;
@@ -347,6 +465,7 @@ body::before {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-bottom: 1.25rem;
 }
 
 /* ============================================
@@ -357,12 +476,49 @@ body::before {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
 }
+
+/* Animated glowing border on skill group hover.
+   Uses a pseudo-element with a conic-gradient that rotates. */
 .skill-group {
   background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem;
+  position: relative;
+  isolation: isolate;
 }
+.skill-group::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(var(--radius) + 1px);
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    transparent 0deg,
+    var(--accent) 60deg,
+    var(--accent2) 120deg,
+    transparent 180deg
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.skill-group:hover::before {
+  opacity: 1;
+  animation: spin-border 3s linear infinite;
+}
+@keyframes spin-border {
+  to { --angle: 360deg; }
+}
+/* Fallback solid inner background so content stays readable */
+.skill-group::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: calc(var(--radius) - 1px);
+  background: var(--surface);
+  z-index: -1;
+}
+
 .skill-group__label {
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -370,6 +526,52 @@ body::before {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 0.75rem;
+}
+
+/* ============================================
+   SKILL PROGRESS BARS
+   ============================================ */
+.skill-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.skill-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.skill-bar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.skill-bar__name {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text);
+}
+.skill-bar__pct {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+.skill-bar__track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.skill-bar__fill {
+  height: 100%;
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(to right, var(--accent), var(--accent2));
+}
+/* JS adds .skill-bars--animate when visible, triggering the fill */
+.skill-bars--animate .skill-bar__fill {
+  width: var(--pct);
 }
 
 /* ============================================
@@ -382,12 +584,24 @@ body::before {
   border-radius: var(--radius) var(--radius) 0 0;
   aspect-ratio: 16 / 9;
   background: var(--border);
+  position: relative;
 }
 .project-card__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+}
+/* Dark gradient overlay at the bottom of card images */
+.project-card__image::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(17, 24, 39, 0.8), transparent);
+  pointer-events: none;
 }
 .project-card:hover .project-card__image img {
   transform: scale(1.03);
@@ -408,23 +622,6 @@ body::before {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-/* ============================================
-   SKILLS GRID
-   ============================================ */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-.skill-group__label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.75rem;
 }
 
 /* ============================================
@@ -481,6 +678,63 @@ body::before {
   font-size: 0.975rem;
 }
 .about-body a { color: var(--accent); }
+
+/* ============================================
+   TIMELINE
+   Used for the Background section on about page.
+   ============================================ */
+.timeline {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+/* Vertical line running down the left side */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+}
+.timeline__item {
+  position: relative;
+  padding-bottom: 2rem;
+}
+.timeline__item:last-child { padding-bottom: 0; }
+/* Dot on the timeline line */
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(0, 229, 168, 0.6);
+  transform: translateX(-3px);
+}
+.timeline__date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+}
+.timeline__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+.timeline__body {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
 
 /* ============================================
    PROJECT DETAIL
@@ -610,7 +864,16 @@ body::before {
    ============================================ */
 .site-footer {
   padding: 3rem 0;
-  border-top: 1px solid var(--border);
+  position: relative;
+}
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent), var(--accent2), transparent);
 }
 .site-footer .container {
   display: flex;
@@ -654,5 +917,6 @@ body::before {
   .site-nav a:not(.btn--nav) { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .reveal { opacity: 1; transform: none; }
 }
