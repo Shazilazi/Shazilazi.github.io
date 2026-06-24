@@ -35,7 +35,7 @@ layout: default
 <section class="section">
   <div class="container">
     <div class="section__header">
-      <h2 class="section__title">Featured projects</h2>
+      <h2 class="section__title section__title--accent">Featured projects</h2>
       <a href="{{ '/projects/' | relative_url }}" class="section__link">All projects →</a>
     </div>
     {% assign featured = site.projects | where: "featured", true %}
@@ -73,7 +73,7 @@ layout: default
       <h2 class="section__title">Skills & tools</h2>
     </div>
     <div class="skills-grid">
-      <div>
+      <div class="skill-group">
         <p class="skill-group__label">Languages</p>
         <div class="skill-group__items">
           <div class="skill-icon-item">
@@ -89,7 +89,7 @@ layout: default
           </div>
         </div>
       </div>
-      <div>
+      <div class="skill-group">
         <p class="skill-group__label">Visualisation</p>
         <div class="skill-group__items">
           <div class="skill-icon-item">
@@ -101,7 +101,7 @@ layout: default
           </div>
         </div>
       </div>
-      <div>
+      <div class="skill-group">
         <p class="skill-group__label">Data & tools</p>
         <div class="skill-group__items">
           <div class="skill-icon-item">
@@ -118,7 +118,7 @@ layout: default
           </div>
         </div>
       </div>
-      <div>
+      <div class="skill-group">
         <p class="skill-group__label">Environment</p>
         <div class="skill-group__items">
           <div class="skill-icon-item">
