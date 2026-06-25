@@ -23,7 +23,8 @@ const revealObserver = new IntersectionObserver(
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('reveal--visible');
-        revealObserver.unobserve(entry.target);
+      } else {
+        entry.target.classList.remove('reveal--visible');
       }
     });
   },
@@ -42,7 +43,8 @@ const barObserver = new IntersectionObserver(
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('skill-bars--animate');
-        barObserver.unobserve(entry.target);
+      } else {
+        entry.target.classList.remove('skill-bars--animate');
       }
     });
   },
