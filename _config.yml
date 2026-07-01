@@ -13,6 +13,16 @@ author:
   linkedin: "https://www.linkedin.com/in/caleb-trent-aa6ba915a/"
   github: "https://github.com/Shazilazi"
   email: "caleb.trent93@gmail.com"
+  cv: "/assets/files/caleb-trent-cv.pdf"
+
+# Default social preview image, used by jekyll-seo-tag for Open Graph /
+# Twitter card meta tags (og:image, twitter:image, twitter:card, etc.)
+# Individual pages/projects can override by setting their own `image` in
+# front matter (e.g. a project screenshot).
+image:
+  path: /assets/images/og-image.png
+  width: 1200
+  height: 630
 
 include:
   - _pages
