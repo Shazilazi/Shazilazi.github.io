@@ -1,8 +1,5 @@
 /* ============================================
    SCROLL PROGRESS BAR
-   Updates the --scroll-pct CSS variable on
-   the body as the user scrolls, which drives
-   the left-edge progress bar in CSS.
    ============================================ */
 function updateScrollProgress() {
   const scrollTop = window.scrollY;
@@ -14,17 +11,14 @@ window.addEventListener('scroll', updateScrollProgress, { passive: true });
 
 /* ============================================
    SCROLL FADE-IN
-   Watches all .reveal elements. When one enters
-   the viewport, adds .reveal--visible which
-   triggers the CSS opacity/transform transition.
+   One-shot: stays visible once revealed.
    ============================================ */
 const revealObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('reveal--visible');
-      } else {
-        entry.target.classList.remove('reveal--visible');
+        revealObserver.unobserve(entry.target);
       }
     });
   },
@@ -34,17 +28,14 @@ document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el))
 
 /* ============================================
    SKILL BAR ANIMATION
-   When a .skill-bars block enters the viewport,
-   adds .skill-bars--animate which triggers the
-   CSS width transition on each .skill-bar__fill.
+   One-shot: animates in once when visible.
    ============================================ */
 const barObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('skill-bars--animate');
-      } else {
-        entry.target.classList.remove('skill-bars--animate');
+        barObserver.unobserve(entry.target);
       }
     });
   },
@@ -53,12 +44,48 @@ const barObserver = new IntersectionObserver(
 document.querySelectorAll('.skill-bars').forEach((el) => barObserver.observe(el));
 
 /* ============================================
+   ANIMATED STAT COUNTERS
+   Counts up from 0 to the target number when
+   the stats block scrolls into view.
+   One-shot: only runs once per page load.
+   Reads the text content of each .stat__number
+   element, parses the number and any suffix
+   (e.g. "+" in "12+"), then animates up to it.
+   ============================================ */
+const statObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      statObserver.unobserve(entry.target);
+
+      entry.target.querySelectorAll('.stat__number').forEach((el) => {
+        const raw = el.textContent.trim();
+        const suffix = raw.replace(/[0-9]/g, '');
+        const target = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+        if (isNaN(target)) return;
+
+        const duration = 1200;
+        const start = performance.now();
+
+        function tick(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.floor(ease * target) + suffix;
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+
+        el.textContent = '0' + suffix;
+        requestAnimationFrame(tick);
+      });
+    });
+  },
+  { threshold: 0.5 }
+);
+document.querySelectorAll('.hero__stats').forEach((el) => statObserver.observe(el));
+
+/* ============================================
    PROJECT FILTERING
-   On the projects page, clicking a filter chip
-   shows only project cards matching that
-   category (data-category attribute). "All"
-   shows everything. Shows an empty state if a
-   category has no matches.
    ============================================ */
 (function () {
   const filterBar = document.querySelector('.filter-bar');
@@ -93,9 +120,6 @@ document.querySelectorAll('.skill-bars').forEach((el) => barObserver.observe(el)
 
 /* ============================================
    TYPEWRITER EFFECT
-   Types out the hero headline character by
-   character, then types the accent phrase.
-   Runs once on page load.
    ============================================ */
 (function () {
   const target = document.getElementById('typewriter');
@@ -104,15 +128,13 @@ document.querySelectorAll('.skill-bars').forEach((el) => barObserver.observe(el)
   const before = 'Turning raw data into ';
   const accent = 'clear decisions';
   const full = before + accent;
-
   let i = 0;
 
   function type() {
     if (i <= full.length) {
       const plain = full.slice(0, Math.min(i, before.length));
       const coloured = i > before.length ? full.slice(before.length, i) : '';
-      target.innerHTML =
-        plain + (coloured ? '<em>' + coloured + '</em>' : '');
+      target.innerHTML = plain + (coloured ? '<em>' + coloured + '</em>' : '');
       i++;
       setTimeout(type, i < before.length ? 55 : 80);
     }
