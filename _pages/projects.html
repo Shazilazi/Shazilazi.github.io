@@ -9,9 +9,20 @@ permalink: /projects/
     <div class="section__header">
       <h1 class="section__title">All projects</h1>
     </div>
-    <div class="projects-grid">
+
+    {% assign categories = site.projects | map: "category" | compact | uniq | sort %}
+    {% if categories.size > 1 %}
+      <div class="filter-bar" role="group" aria-label="Filter projects by category">
+        <button type="button" class="filter-chip is-active" data-filter="all">All</button>
+        {% for cat in categories %}
+          <button type="button" class="filter-chip" data-filter="{{ cat }}">{{ cat }}</button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="projects-grid" id="projects-grid">
       {% for project in site.projects %}
-        <a href="{{ project.url | relative_url }}" class="project-card reveal">
+        <a href="{{ project.url | relative_url }}" class="project-card" data-category="{{ project.category | default: "Project" }}">
           {% if project.image %}
             <div class="project-card__image">
               <img src="{{ project.image | relative_url }}" alt="{{ project.title }}" loading="lazy" />
@@ -30,5 +41,7 @@ permalink: /projects/
         </a>
       {% endfor %}
     </div>
+
+    <p class="empty-state" id="projects-empty" style="display: none;">No projects in this category yet.</p>
   </div>
 </section>
