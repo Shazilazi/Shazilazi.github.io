@@ -10,6 +10,11 @@ permalink: /about/
     <aside class="about-sidebar">
       <p class="about-sidebar__name">{{ site.author.name }}</p>
       <p class="about-sidebar__role">{{ site.author.role }}</p>
+
+      {% if site.author.cv %}
+        <a href="{{ site.author.cv | relative_url }}" class="btn btn--cv" download>⬇ Download CV</a>
+      {% endif %}
+
       <nav class="about-sidebar__links">
         {% if site.author.linkedin %}
           <a href="{{ site.author.linkedin }}" target="_blank" rel="noopener">↗ LinkedIn</a>
@@ -68,35 +73,22 @@ permalink: /about/
       </p>
 
       <h2>Background</h2>
-      <div class="timeline">
-        <div class="timeline__item">
-          <p class="timeline__date">Current</p>
-          <p class="timeline__title">Data Analyst — {{ site.author.company }}</p>
-          <p class="timeline__body">
-            Working with stakeholders across the business to understand reporting needs
-            and translate requirements into practical data solutions. Bridging the gap
-            between technical data work and business objectives.
-          </p>
-        </div>
-        <div class="timeline__item">
-          <p class="timeline__date">Ongoing</p>
-          <p class="timeline__title">Continuous Learning & Development</p>
-          <p class="timeline__body">
-            Continuously expanding knowledge in data analytics, software development,
-            and automation. The field of data is constantly evolving — maintaining
-            curiosity and a willingness to learn are essential for long-term success.
-          </p>
-        </div>
-        <div class="timeline__item">
-          <p class="timeline__date">This portfolio</p>
-          <p class="timeline__title">Projects & Practical Experience</p>
-          <p class="timeline__body">
-            Each project here represents an opportunity to explore new techniques, tools,
-            and business challenges — demonstrating analytical thinking, technical skills,
-            and an approach to solving real-world problems using data.
-          </p>
-        </div>
-      </div>
+      <p>
+        Throughout my career, I have worked with stakeholders across different areas of business
+        to understand their reporting needs and translate those requirements into practical data
+        solutions. This has allowed me to develop a strong ability to bridge the gap between
+        technical data work and business objectives.
+      </p>
+      <p>
+        I enjoy continuously expanding my knowledge and finding new ways to improve analytical
+        processes. The field of data is constantly evolving, and I believe that maintaining
+        curiosity and a willingness to learn are essential for long-term success.
+      </p>
+      <p>
+        This portfolio showcases projects that demonstrate my analytical thinking, technical
+        skills, and approach to solving real-world problems using data. Each project represents
+        an opportunity to explore new techniques, tools, and business challenges.
+      </p>
 
       <h2>Currently Learning</h2>
       <p>
