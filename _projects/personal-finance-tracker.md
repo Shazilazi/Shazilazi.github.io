@@ -6,17 +6,17 @@ category: "Dashboard"
 date: 2026-01-01
 featured: true
 tools: [Power BI, Power Query, DAX, Google Sheets, Google Forms]
-link: https://github.com/Shazilazi/personal-finance-tracker
+link: https://github.com/Shazilazi/personal-finance-report
 
 # Thumbnail shown on the project cards
-image: /assets/images/projects/personal-finance-tracker/cover.png
+image: /assets/images/projects/personal-finance-report/cover.png
 ---
 
 # Personal Budget Dashboard
 
 > An interactive Power BI dashboard developed to help my household track income, expenses, budgets, and savings through a practical, easy-to-maintain reporting solution.
 
-![Dashboard Overview](/assets/images/projects/personal-finance-tracker/dashboard-overview.png)
+![Dashboard Overview](/assets/images/projects/personal-finance-report/dashboard-overview.png)
 
 ---
 
@@ -105,7 +105,7 @@ Each expense record contains:
 
 Income records use a simpler structure with a single income source category.
 
-![Google Form](/assets/images/projects/personal-finance-tracker/google-form.png)
+![Google Form](/assets/images/projects/personal-finance-report/google-form.png)
 
 ---
 
@@ -150,7 +150,7 @@ The model consists of:
 
 This structure keeps calculations efficient while allowing users to drill from summary information into individual spending categories.
 
-![Data Model](/assets/images/projects/personal-finance-tracker/data-model.png)
+![Data Model](/assets/images/projects/personal-finance-report/data-model.png)
 
 ---
 
@@ -167,7 +167,7 @@ Key transformation steps include:
 - Cleaning inconsistent entries
 - Preparing data for the model
 
-![Power Query](/assets/images/projects/personal-finance-tracker/power-query.png)
+![Power Query](/assets/images/projects/personal-finance-report/power-query.png)
 
 ---
 
@@ -186,7 +186,7 @@ Features include:
 - Monthly Summary
 - Budget Status
 
-![Executive Overview](/assets/images/projects/personal-finance-tracker/page-overview.png)
+![Executive Overview](/assets/images/projects/personal-finance-report/page-overview.png)
 
 ---
 
@@ -201,7 +201,7 @@ Includes:
 - Annual comparisons
 - Running totals
 
-![Income Analysis](/assets/images/projects/personal-finance-tracker/page-income.png)
+![Income Analysis](/assets/images/projects/personal-finance-report/page-income.png)
 
 ---
 
@@ -224,7 +224,7 @@ Visualisations include:
 - Largest expenses
 - Historical comparisons
 
-![Expense Analysis](/assets/images/projects/personal-finance-tracker/page-expenses.png)
+![Expense Analysis](/assets/images/projects/personal-finance-report/page-expenses.png)
 
 ---
 
@@ -239,7 +239,7 @@ Includes:
 - Overspend Indicators
 - Budget Utilisation
 
-![Budget Tracking](/assets/images/projects/personal-finance-tracker/page-budget.png)
+![Budget Tracking](/assets/images/projects/personal-finance-report/page-budget.png)
 
 ---
 
@@ -254,7 +254,7 @@ Visualisations include:
 - Monthly savings
 - Running balance
 
-![Savings Analysis](/assets/images/projects/personal-finance-tracker/page-savings.png)
+![Savings Analysis](/assets/images/projects/personal-finance-report/page-savings.png)
 
 ---
 
@@ -275,7 +275,7 @@ Some of the calculations used throughout the dashboard include:
 
 Future versions will include forecasting measures and predictive budgeting.
 
-![DAX Measures](/assets/images/projects/personal-finance-tracker/dax-measures.png)
+![DAX Measures](/assets/images/projects/personal-finance-report/dax-measures.png)
 
 ---
 
@@ -338,24 +338,24 @@ Planned enhancements include:
 
 ## Full Dashboard
 
-![Dashboard](/assets/images/projects/personal-finance-tracker/gallery-dashboard.png)
+![Dashboard](/assets/images/projects/personal-finance-report/gallery-dashboard.png)
 
 ## Executive Overview
 
-![Overview](/assets/images/projects/personal-finance-tracker/gallery-overview.png)
+![Overview](/assets/images/projects/personal-finance-report/gallery-overview.png)
 
 ## Expense Analysis
 
-![Expenses](/assets/images/projects/personal-finance-tracker/gallery-expenses.png)
+![Expenses](/assets/images/projects/personal-finance-report/gallery-expenses.png)
 
 ## Budget Tracking
 
-![Budget](/assets/images/projects/personal-finance-tracker/gallery-budget.png)
+![Budget](/assets/images/projects/personal-finance-report/gallery-budget.png)
 
 ## Data Model
 
-![Model](/assets/images/projects/personal-finance-tracker/gallery-model.png)
+![Model](/assets/images/projects/personal-finance-report/gallery-model.png)
 
 ## Power Query
 
-![Power Query](/assets/images/projects/personal-finance-tracker/gallery-power-query.png)
+![Power Query](/assets/images/projects/personal-finance-report/gallery-power-query.png)
