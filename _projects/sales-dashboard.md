@@ -5,6 +5,7 @@ summary: "Built an end-to-end sales dashboard for a retail client, including a 1
 category: "Dashboard"
 date: 2024-09-01
 featured: true
+published: false
 tools: [Python, Power BI, SQL, pandas]
 link: https://github.com/yourusername/sales-dashboard
 ---
