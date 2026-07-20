@@ -6,7 +6,7 @@ category: "Dashboard"
 date: 2026-07-01
 featured: true
 tools: [Python, Scryfall API, MTGJSON, Power BI, Power Query, DAX]
-link: https://github.com/YOUR-USERNAME/mtg-collection-tracker
+link: https://github.com/shazilazi/mtg-collection-tracker
 
 # Thumbnail shown on the project cards
 image: /assets/images/projects/mtg-collection-tracker/cover.png
