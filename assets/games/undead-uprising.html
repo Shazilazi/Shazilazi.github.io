@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Undead Uprising — Cleric Survivor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d12;
+    --panel: #14171f;
+    --gold: #c9a44c;
+    --gold-bright: #e8c874;
+    --holy: #8fd6ff;
+    --blood: #8e2b2b;
+    --bone: #d8d2bf;
+    --text: #e9e4d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: var(--bg);
+    font-family: 'Cinzel', serif;
+    color: var(--text);
+  }
+  #game-wrap {
+    position: relative;
+    width: 100vw; height: 100vh;
+  }
+  canvas {
+    display: block;
+    background: radial-gradient(ellipse at center, #1a1d27 0%, #0b0d12 75%);
+  }
+
+  /* HUD */
+  #hud {
+    position: absolute; top: 0; left: 0; width: 100%;
+    padding: 14px 20px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    pointer-events: none;
+  }
+  .hud-block {
+    background: rgba(15,16,22,0.72);
+    border: 1px solid rgba(201,164,76,0.35);
+    border-radius: 6px;
+    padding: 8px 14px;
+    min-width: 220px;
+  }
+  .bar-label {
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 4px; display: flex; justify-content: space-between;
+  }
+  .bar-track {
+    width: 100%; height: 10px; background: #05060a;
+    border: 1px solid rgba(201,164,76,0.3); border-radius: 4px; overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .bar-fill { height: 100%; transition: width 0.15s ease; }
+  #hp-fill { background: linear-gradient(90deg, #6e1616, #c73f3f); }
+  #xp-fill { background: linear-gradient(90deg, #4a7bc9, var(--holy)); }
+  #wave-block { text-align: right; }
+  #wave-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 20px; color: var(--gold-bright);
+    text-shadow: 0 0 8px rgba(201,164,76,0.5);
+  }
+  #wave-sub { font-size: 12px; color: #9aa; margin-top: 2px; }
+
+  /* Level up overlay */
+  #levelup-overlay {
+    position: absolute; inset: 0;
+    background: rgba(6,7,10,0.82);
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column;
+    z-index: 20;
+  }
+  #levelup-overlay h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 34px; color: var(--gold-bright);
+    text-shadow: 0 0 14px rgba(232,200,116,0.6);
+    margin-bottom: 26px;
+    letter-spacing: 2px;
+  }
+  #choices { display: flex; gap: 18px; }
+  .choice-card {
+    width: 210px; background: linear-gradient(160deg, #1c1f29, #101319);
+    border: 1px solid var(--gold); border-radius: 10px;
+    padding: 18px 16px; cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  }
+  .choice-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(201,164,76,0.25);
+    border-color: var(--gold-bright);
+  }
+  .choice-icon { font-size: 30px; margin-bottom: 10px; }
+  .choice-name { font-size: 15px; color: var(--gold-bright); margin-bottom: 8px; }
+  .choice-desc { font-size: 12px; line-height: 1.5; color: #b9b4a0; font-family: sans-serif; }
+
+  /* Game over */
+  #gameover-overlay {
+    position: absolute; inset: 0;
+    background: rgba(4,3,3,0.88);
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; z-index: 30;
+  }
+  #gameover-overlay h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 42px; color: var(--blood);
+    margin-bottom: 10px;
+  }
+  #gameover-overlay p { color: #ccc; margin-bottom: 20px; font-family: sans-serif; }
+  #restart-btn, #start-btn {
+    font-family: 'Cinzel', serif;
+    background: linear-gradient(160deg, var(--gold-bright), var(--gold));
+    color: #1a1300; border: none; padding: 12px 30px;
+    font-size: 15px; letter-spacing: 1px; border-radius: 6px; cursor: pointer;
+    text-transform: uppercase; font-weight: 700;
+  }
+  #restart-btn:hover, #start-btn:hover { filter: brightness(1.1); }
+
+  /* Start screen */
+  #start-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, #1a1d27 0%, #05060a 80%);
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    z-index: 40; text-align: center; padding: 20px;
+  }
+  #start-overlay h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 46px; color: var(--gold-bright);
+    text-shadow: 0 0 20px rgba(232,200,116,0.4);
+  }
+  #start-overlay p {
+    max-width: 480px; margin: 16px 0 26px; font-family: sans-serif;
+    color: #b9b4a0; font-size: 14px; line-height: 1.6;
+  }
+  #controls-hint {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; color: #766; letter-spacing: 1px; font-family: sans-serif;
+    pointer-events: none;
+  }
+
+  /* Currency chip */
+  .currency-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(15,16,22,0.6);
+    border: 1px solid rgba(143,214,255,0.35);
+    border-radius: 20px; padding: 6px 16px;
+    font-size: 14px; color: var(--holy);
+  }
+  .currency-chip .icon { font-size: 15px; }
+  .currency-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; justify-content: center; }
+
+  /* Generic hover tooltip — add data-tooltip="..." to any element with class tooltip-target */
+  .tooltip-target { position: relative; cursor: help; }
+  .tooltip-target::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    width: max-content; max-width: 220px;
+    background: #0a0b10; border: 1px solid rgba(201,164,76,0.4);
+    color: var(--text); font-family: sans-serif; font-size: 11px; line-height: 1.4;
+    padding: 8px 10px; border-radius: 6px; white-space: pre-line;
+    opacity: 0; pointer-events: none; transition: opacity 0.12s ease;
+    z-index: 300; text-align: center;
+  }
+  .tooltip-target:hover::after { opacity: 1; }
+
+  .start-buttons { display: flex; gap: 14px; }
+  #talents-btn {
+    font-family: 'Cinzel', serif;
+    background: transparent; color: var(--holy);
+    border: 1px solid var(--holy); padding: 12px 26px;
+    font-size: 15px; letter-spacing: 1px; border-radius: 6px; cursor: pointer;
+    text-transform: uppercase; font-weight: 700;
+  }
+  #talents-btn:hover { background: rgba(143,214,255,0.1); }
+  .talents-alt-btn {
+    font-family: 'Cinzel', serif;
+    background: transparent; color: var(--holy);
+    border: 1px solid var(--holy); padding: 12px 26px;
+    font-size: 15px; letter-spacing: 1px; border-radius: 6px; cursor: pointer;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .talents-alt-btn:hover { background: rgba(143,214,255,0.1); }
+
+  /* Talent tree overlay */
+  #talent-overlay {
+    position: absolute; inset: 0;
+    background: rgba(4,5,8,0.94);
+    display: none; flex-direction: column;
+    z-index: 50; overflow: hidden;
+  }
+  #talent-topbar {
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    padding: 16px 20px; flex-wrap: wrap; flex-shrink: 0;
+    position: relative; z-index: 5;
+    border-bottom: 1px solid rgba(201,164,76,0.2);
+  }
+  #talent-topbar h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 26px; color: var(--gold-bright); margin: 0;
+  }
+  #talent-topbar #close-talents-btn { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
+  #talent-viewport {
+    flex: 1; position: relative; overflow: hidden;
+    cursor: grab; touch-action: none; user-select: none;
+  }
+  #talent-viewport.dragging { cursor: grabbing; }
+  #talent-tree {
+    position: absolute; top: 0; left: 0;
+    width: 900px; height: 900px;
+  }
+  .deity-tree-container {
+    display: flex; gap: 46px; margin-top: 18px; flex-wrap: wrap; justify-content: center;
+  }
+  .branch-column { display: flex; flex-direction: column; align-items: center; width: 220px; }
+  .branch-title {
+    font-size: 16px; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 16px; padding-bottom: 6px; border-bottom: 1px solid rgba(201,164,76,0.3);
+    width: 100%; text-align: center;
+  }
+  .branch-faith .branch-title { color: #e8c874; }
+  .branch-vitality .branch-title { color: #c9636b; }
+  .branch-communion .branch-title { color: #8fd6ff; }
+
+  /* Radial general talent tree */
+  .radial-hub {
+    position: absolute; width: 70px; height: 70px; border-radius: 50%;
+    background: radial-gradient(circle, #2a2410, #14120a);
+    border: 2px solid var(--gold-bright); color: var(--gold-bright);
+    font-size: 30px; display: flex; align-items: center; justify-content: center;
+    transform: translate(-50%, -50%); box-shadow: 0 0 20px rgba(232,200,116,0.4); z-index: 3;
+  }
+  .radial-hub:hover { z-index: 200; }
+  .radial-line {
+    position: absolute; height: 2px; background: rgba(255,255,255,0.1);
+    transform-origin: 0 0; z-index: 1;
+  }
+  .radial-line.active { background: rgba(201,164,76,0.55); }
+  .radial-node-wrap {
+    position: absolute; transform: translate(-50%, -50%); z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .radial-node-wrap:has(.tooltip-target:hover) { z-index: 200; }
+  .radial-node {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; border: 2px solid #3a3d47; background: #161922; color: #ccc;
+    cursor: pointer; transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .radial-node.locked { opacity: 0.35; cursor: not-allowed; }
+  .radial-node.available:hover { transform: scale(1.1); }
+  .radial-node.ranked { color: var(--gold-bright); }
+  .radial-node.maxed {
+    background: #221d10; box-shadow: 0 0 10px rgba(232,200,116,0.45); cursor: default;
+  }
+  .radial-node.radial-locked { font-size: 18px; opacity: 0.5; cursor: default; }
+  .branch-faith.radial-node.ranked, .branch-faith.radial-node.maxed { border-color: var(--gold); }
+  .branch-vitality.radial-node.ranked, .branch-vitality.radial-node.maxed { border-color: #c9636b; }
+  .branch-communion.radial-node.ranked, .branch-communion.radial-node.maxed { border-color: var(--holy); }
+  .branch-light.radial-node.ranked, .branch-light.radial-node.maxed { border-color: var(--gold-bright); }
+  .branch-shadow.radial-node.ranked, .branch-shadow.radial-node.maxed { border-color: #e88fb0; }
+  .radial-pips { display: flex; gap: 4px; }
+  .radial-pips .pip { width: 7px; height: 7px; border-radius: 50%; background: #333; border: 1px solid #555; }
+  .radial-pips .pip.filled { background: var(--gold-bright); border-color: var(--gold-bright); }
+
+  .talent-node {
+    width: 100%; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+    border: 1px solid #3a3d47; background: #161922; cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    position: relative;
+  }
+  .talent-node.locked { opacity: 0.4; cursor: not-allowed; }
+  .talent-node.purchased { border-color: var(--gold-bright); background: #211d10; }
+  .talent-node.available:hover { transform: translateY(-3px); }
+  .talent-node .t-name { font-size: 13px; color: var(--text); margin-bottom: 4px; }
+  .talent-node .t-desc { font-size: 11px; color: #999; font-family: sans-serif; line-height: 1.4; margin-bottom: 6px; }
+  .talent-node .t-cost { font-size: 11px; color: var(--holy); font-family: sans-serif; }
+  .talent-node.purchased .t-cost::after { content: ' ✓ owned'; color: var(--gold-bright); }
+  .tree-connector { width: 2px; height: 14px; background: #3a3d47; margin-bottom: 10px; }
+
+  #close-talents-btn {
+    font-family: 'Cinzel', serif; background: var(--gold); color: #1a1300;
+    border: none; padding: 10px 26px; font-size: 14px; border-radius: 6px;
+    cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+  }
+  #menu-btn {
+    position: absolute; bottom: 16px; right: 20px;
+    font-family: 'Cinzel', serif;
+    background: rgba(15,16,22,0.75); color: var(--holy);
+    border: 1px solid rgba(143,214,255,0.45); border-radius: 6px;
+    padding: 9px 18px; font-size: 12px; letter-spacing: 1px;
+    text-transform: uppercase; cursor: pointer; display: none;
+  }
+  #menu-btn:hover { background: rgba(143,214,255,0.12); }
+  #pause-overlay {
+    position: absolute; inset: 0;
+    background: rgba(6,7,10,0.85);
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; z-index: 25;
+  }
+  #pause-overlay h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 32px; color: var(--gold-bright);
+    margin-bottom: 26px; letter-spacing: 2px;
+  }
+  #pause-menu-buttons { display: flex; flex-direction: column; gap: 12px; width: 260px; }
+  .pause-btn {
+    font-family: 'Cinzel', serif;
+    background: linear-gradient(160deg, var(--gold-bright), var(--gold));
+    color: #1a1300; border: none; padding: 13px 20px;
+    font-size: 14px; letter-spacing: 1px; border-radius: 6px; cursor: pointer;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .pause-btn:hover { filter: brightness(1.1); }
+  .pause-btn.pause-btn-secondary {
+    background: transparent; color: var(--holy); border: 1px solid var(--holy);
+  }
+  .pause-btn.pause-btn-secondary:hover { background: rgba(143,214,255,0.1); }
+  .pause-btn.pause-btn-disabled {
+    background: transparent; color: #555; border: 1px solid #3a3a3a;
+    cursor: not-allowed;
+  }
+  .pause-btn.pause-btn-disabled:hover { filter: none; background: transparent; }
+  #run-essence-line {
+    font-size: 11px; color: var(--holy); margin-top: 6px;
+    font-family: sans-serif; letter-spacing: 0.5px;
+  }
+  #run-faith-line {
+    font-size: 11px; color: #d68fe8; margin-top: 3px;
+    font-family: sans-serif; letter-spacing: 0.5px; display: none;
+  }
+  #ability-bar { display: flex; gap: 6px; margin-top: 8px; }
+  .ability-icon {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(201,164,76,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--gold-bright); cursor: default;
+  }
+
+  /* Deity / Covenant screen */
+  #covenant-btn {
+    font-family: 'Cinzel', serif;
+    background: transparent; color: #d68fe8;
+    border: 1px solid #d68fe8; padding: 12px 26px;
+    font-size: 15px; letter-spacing: 1px; border-radius: 6px; cursor: pointer;
+    text-transform: uppercase; font-weight: 700;
+  }
+  #covenant-btn:hover { background: rgba(214,143,232,0.1); }
+  #covenant-overlay {
+    position: absolute; inset: 0;
+    background: rgba(4,5,8,0.95);
+    display: none; flex-direction: column; align-items: center;
+    z-index: 55; padding: 30px 20px; overflow-y: auto;
+  }
+  #covenant-overlay h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 30px; color: #d68fe8; margin-bottom: 6px;
+  }
+  .faith-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(15,16,22,0.6);
+    border: 1px solid rgba(214,143,232,0.4);
+    border-radius: 20px; padding: 6px 16px;
+    font-size: 14px; color: #d68fe8; margin-bottom: 18px;
+  }
+  #deity-select { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+  .deity-card {
+    width: 240px; background: linear-gradient(160deg, #1c1f29, #101319);
+    border: 1px solid #555; border-radius: 10px; padding: 20px 18px; cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease;
+  }
+  .deity-card:hover { transform: translateY(-6px); }
+  .deity-card.deity-light { border-color: var(--gold); }
+  .deity-card.deity-light:hover { box-shadow: 0 8px 24px rgba(232,200,116,0.25); }
+  .deity-card.deity-shadow { border-color: #6e1f3a; }
+  .deity-card.deity-shadow:hover { box-shadow: 0 8px 24px rgba(214,63,111,0.25); }
+  .deity-name { font-size: 17px; margin-bottom: 8px; }
+  .deity-card.deity-light .deity-name { color: var(--gold-bright); }
+  .deity-card.deity-shadow .deity-name { color: #e88fb0; }
+  .deity-desc { font-size: 12px; line-height: 1.5; color: #b9b4a0; font-family: sans-serif; }
+
+  #active-deity-block { text-align: center; margin-top: 10px; }
+  #active-deity-name { font-size: 20px; margin-bottom: 4px; }
+  #ordination-btn {
+    margin-top: 22px;
+    font-family: 'Cinzel', serif; background: linear-gradient(160deg, #e88fb0, #6e1f3a);
+    color: #fff; border: none; padding: 11px 24px; font-size: 13px; border-radius: 6px;
+    cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+  }
+  #ordination-btn:hover { filter: brightness(1.1); }
+  #ordination-hint { font-size: 11px; color: #998; font-family: sans-serif; margin-top: 8px; max-width: 380px; }
+
+  .branch-light .branch-title { color: var(--gold-bright); }
+  .branch-shadow .branch-title { color: #e88fb0; }
+  .talent-node.branch-locked-placeholder {
+    opacity: 0.55; font-size: 12px; color: #887; font-family: sans-serif;
+    text-align: center; padding: 20px 12px; cursor: default;
+  }
+
+  /* Ascension stub */
+  #ascension-stub {
+    margin-top: 30px; padding: 16px 20px; border: 1px dashed #555; border-radius: 8px;
+    max-width: 420px; text-align: center; color: #766; font-family: sans-serif; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div id="game-wrap">
+  <canvas id="game"></canvas>
+
+  <div id="hud" style="display:none;">
+    <div class="hud-block">
+      <div class="bar-label"><span>Vitality</span><span id="hp-text">100/100</span></div>
+      <div class="bar-track"><div class="bar-fill" id="hp-fill" style="width:100%"></div></div>
+      <div class="bar-label"><span>Level <span id="level-text">1</span></span><span id="xp-text">0/10</span></div>
+      <div class="bar-track"><div class="bar-fill" id="xp-fill" style="width:0%"></div></div>
+      <div id="run-essence-line">✦ <span id="run-essence-text">0</span> Soul Essence earned this run</div>
+      <div id="run-faith-line">☾ <span id="run-faith-text">0</span> Faith earned this run</div>
+      <div id="ability-bar"></div>
+    </div>
+    <div class="hud-block" id="wave-block">
+      <div id="wave-title">Wave 1</div>
+      <div id="wave-sub">Ghouls stir in the dark...</div>
+    </div>
+  </div>
+
+  <button id="menu-btn">Menu</button>
+
+  <div id="pause-overlay">
+    <h1>Paused</h1>
+    <div id="pause-menu-buttons">
+      <button class="pause-btn" id="resume-btn">Resume</button>
+      <button class="pause-btn pause-btn-secondary" id="pause-talents-btn">End Run &amp; Talent Tree</button>
+      <button class="pause-btn pause-btn-disabled" id="options-btn" disabled>Options (coming soon)</button>
+      <button class="pause-btn pause-btn-disabled" id="exit-btn" disabled>Exit Game (coming soon)</button>
+    </div>
+  </div>
+
+  <div id="levelup-overlay">
+    <h1>The Light Grows Within You</h1>
+    <div id="choices"></div>
+  </div>
+
+  <div id="gameover-overlay">
+    <h1 id="gameover-title">You Have Fallen</h1>
+    <p id="gameover-stats">Survived 0 waves.</p>
+    <p id="gameover-essence" style="color:var(--holy);">+0 Soul Essence</p>
+    <div class="start-buttons">
+      <button id="restart-btn">Rise Again</button>
+      <button id="gameover-talents-btn" class="talents-alt-btn">Return to Talent Tree</button>
+    </div>
+  </div>
+
+  <div id="start-overlay">
+    <h1>Undead Uprising</h1>
+    <p>You are a cleric standing against the endless dead. Move with <b>WASD</b> or arrow keys.
+    Your holy power pulses automatically, turning and destroying the undead around you.
+    Survive the waves, grow in power, and see how far your faith carries you.</p>
+    <div class="currency-row">
+      <div class="currency-chip tooltip-target" data-tooltip="Earned by surviving waves. Spend it in the Talent Tree for permanent stat bonuses."><span class="icon">✦</span><span id="start-currency">0</span> Soul Essence</div>
+      <div class="currency-chip tooltip-target" data-tooltip="Earned each run once devoted to a deity. Spend it in the Covenant on that deity's abilities." style="border-color: rgba(214,143,232,0.4); color: #d68fe8;"><span class="icon">☾</span><span id="start-faith">0</span> Faith</div>
+    </div>
+    <div class="start-buttons">
+      <button id="start-btn">Begin the Vigil</button>
+      <button id="talents-btn">Talent Tree</button>
+      <button id="covenant-btn">Covenant</button>
+    </div>
+  </div>
+
+  <div id="talent-overlay">
+    <div id="talent-topbar">
+      <button id="close-talents-btn">← Return</button>
+      <h1>Rites of the Faithful</h1>
+      <div class="currency-chip"><span class="icon">✦</span><span id="talent-currency">0</span> Soul Essence</div>
+    </div>
+    <div id="talent-viewport">
+      <div id="talent-tree"></div>
+    </div>
+  </div>
+
+  <div id="covenant-overlay">
+    <h1>Covenant of the Faithful</h1>
+    <div class="faith-chip"><span class="icon">☾</span><span id="covenant-faith">0</span> Faith</div>
+
+    <div id="deity-select"></div>
+
+    <div id="active-deity-block" style="display:none;">
+      <div id="active-deity-name"></div>
+      <div id="deity-talent-tree" class="deity-tree-container"></div>
+      <button id="ordination-btn">Perform the Rite of Ordination</button>
+      <div id="ordination-hint">Permanently unlocks this deity's branch in your general Talent Tree, then lets you choose a deity again (same or different) for your next run. Nothing you've bought is ever lost.</div>
+    </div>
+
+    <div id="ascension-stub">
+      <b>Ascension</b> — locked. Recruiting party members (barbarian, rogue, bard and more) unlocks once you've walked far enough down the path of Ordination. Coming in a future update.
+    </div>
+
+    <button id="close-covenant-btn">Return</button>
+  </div>
+
+  <div id="controls-hint" style="display:none;">WASD / ARROWS TO MOVE — HOLY PULSE IS AUTOMATIC</div>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ---------- Game State ----------
+  let state = 'start'; // start | playing | paused | levelup | gameover | menu
+  let lastTime = 0;
+  let elapsedGameTime = 0;
+
+  const keys = {};
+  window.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; });
+  window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+
+  const player = {
+    x: 0, y: 0, radius: 16,
+    speed: 175,
+    hp: 100, maxHp: 100,
+    invuln: 0,
+    level: 1, xp: 0, xpToNext: 10,
+    attackDamage: 12,
+    attackRadius: 95,
+    attackCooldown: 1.3,
+    pickupRadius: 50,
+    // deity-granted mechanics (0 / falsy = no effect)
+    dotDamage: 0, hpRegen: 0, reapChance: 0, slowOnHit: 0, faithMultiplier: 1,
+    abilities: [], // owned ability instances — see ABILITY_DEFS below
+  };
+
+  let thralls = []; // simplified "raised undead" allies from Shadow's Reap the Fallen
+  let dmgPopups = []; // floating damage numbers
+  let bursts = []; // visual effect for projectile impacts
+  let projectiles = []; // travelling shots fired by targeted abilities
+
+  // ---------- Abilities framework ----------
+  // Passive abilities (like Holy Pulse) are centered on the player and hit everything
+  // in range. Active/targeted abilities (like Smite) auto-target the nearest enemy.
+  // Holy Pulse is granted to every run from the start; the rest are unlocked via the
+  // general Talent Tree or a deity's Covenant tree (grantAbility is called from a
+  // node's apply() function either way, so the source doesn't matter to the ability itself).
+  // Placeholder shared pace for all projectiles for now — tune per-ability once combat feel is dialed in.
+  const MEDIUM_PROJECTILE_SPEED = 340; // pixels per second
+
+  const ABILITY_DEFS = {
+    holy_pulse: {
+      id: 'holy_pulse', name: 'Holy Pulse', icon: '☉', kind: 'aura',
+      desc: 'Automatically damages all enemies in range on a cooldown.',
+      color: '#8fd6ff', baseStats: {},
+    },
+    smite: {
+      id: 'smite', name: 'Smite', icon: '🔥', kind: 'targeted',
+      desc: 'Calls holy fire on the nearest enemy, dealing heavy damage in a small area.',
+      color: '#ff9d4d', baseStats: { damage: 30, radius: 55, cooldown: 4, speed: MEDIUM_PROJECTILE_SPEED },
+    },
+    wrath_of_dawn: {
+      id: 'wrath_of_dawn', name: 'Wrath of the Dawn', icon: '⚝', kind: 'targeted',
+      desc: 'Devotion to the Radiant Dawn calls down a bolt of light on the nearest enemy.',
+      color: '#fff2c7', baseStats: { damage: 40, radius: 45, cooldown: 3.5, speed: MEDIUM_PROJECTILE_SPEED },
+    },
+    umbral_lance: {
+      id: 'umbral_lance', name: 'Umbral Lance', icon: '🗡', kind: 'targeted',
+      desc: 'Devotion to the Hollow Vigil hurls a lance of dark force, damaging and heavily slowing the nearest enemy.',
+      color: '#b06fd6', baseStats: { damage: 26, radius: 40, cooldown: 3.5, speed: MEDIUM_PROJECTILE_SPEED },
+    },
+  };
+
+  function grantAbility(p, id) {
+    if (p.abilities.some(a => a.id === id)) return; // already owned
+    const def = ABILITY_DEFS[id];
+    if (!def) return;
+    p.abilities.push({
+      id: def.id, name: def.name, icon: def.icon, kind: def.kind, color: def.color,
+      cooldownTimer: 0, stats: Object.assign({}, def.baseStats),
+    });
+  }
+
+  let enemies = [];
+  let orbs = [];
+  let pulses = []; // visual holy pulses
+
+  let wave = 1;
+  let waveEnemiesTotal = 0;
+  let waveEnemiesSpawned = 0;
+  let waveEnemiesRemaining = 0;
+  let spawnTimer = 0;
+  let waveTransitionTimer = 0;
+  let inWaveTransition = false;
+
+  const ENEMY_TYPES = {
+    ghoul:     { hp: 14, speed: 85,  damage: 6,  radius: 12, xp: 3,  color: '#5c7a4a', glow: '#8fbf6a', unlockWave: 1 },
+    skeleton:  { hp: 24, speed: 60,  damage: 9,  radius: 14, xp: 5,  color: '#c9c3a8', glow: '#e8e2c8', unlockWave: 3 },
+    vampire:   { hp: 48, speed: 105, damage: 13, radius: 14, xp: 11, color: '#6e1f3a', glow: '#c93f6f', unlockWave: 6 },
+    construct: { hp: 95, speed: 40,  damage: 20, radius: 19, xp: 22, color: '#7a7a85', glow: '#b9b9c9', unlockWave: 9 },
+  };
+
+  function unlockedTypes(w) {
+    return Object.entries(ENEMY_TYPES).filter(([k, v]) => w >= v.unlockWave).map(([k]) => k);
+  }
+
+  // ---------- Upgrade pool ----------
+  const UPGRADE_POOL = [
+    { name: 'Divine Radius', icon: '◎', desc: '+22 holy pulse radius.', apply: () => player.attackRadius += 22 },
+    { name: 'Holy Power', icon: '☀', desc: '+6 pulse damage.', apply: () => player.attackDamage += 6 },
+    { name: 'Zealous Fervor', icon: '⚡', desc: 'Pulse cooldown reduced by 12%.', apply: () => player.attackCooldown = Math.max(0.35, player.attackCooldown * 0.88) },
+    { name: 'Vitality', icon: '♥', desc: '+20 max HP, fully mended.', apply: () => { player.maxHp += 20; player.hp = player.maxHp; } },
+    { name: 'Swift Feet', icon: '➤', desc: '+14% movement speed.', apply: () => player.speed *= 1.14 },
+    { name: 'Reliquary Pull', icon: '✦', desc: '+35 soul-orb pickup range.', apply: () => player.pickupRadius += 35 },
+  ];
+
+  function pickUpgrades(n) {
+    const pool = [...UPGRADE_POOL];
+    const picked = [];
+    for (let i = 0; i < n && pool.length; i++) {
+      const idx = Math.floor(Math.random() * pool.length);
+      picked.push(pool[idx]);
+      pool.splice(idx, 1);
+    }
+    return picked;
+  }
+
+  // ---------- Meta progression (persists between runs) ----------
+  const META_KEY = 'uu_meta_v1';
+  function loadMeta() {
+    const defaults = { essence: 0, purchased: [], talentRanks: {}, deity: null, faith: 0, deityPurchased: [], unlockedBranches: [] };
+    try {
+      const raw = localStorage.getItem(META_KEY);
+      if (raw) {
+        const loaded = Object.assign({}, defaults, JSON.parse(raw));
+        // migrate old one-time "purchased" ids into rank 1, so nobody loses prior progress
+        if (loaded.purchased && loaded.purchased.length && Object.keys(loaded.talentRanks).length === 0) {
+          for (const id of loaded.purchased) loaded.talentRanks[id] = 1;
+        }
+        return loaded;
+      }
+    } catch (e) {}
+    return defaults;
+  }
+  const meta = loadMeta();
+  function saveMeta() {
+    try { localStorage.setItem(META_KEY, JSON.stringify(meta)); } catch (e) {}
+  }
+
+  // Talent tree: data-driven radial tree, branching outward from a central hub.
+  // Each node can be purchased up to maxRank times; apply(player) runs once per owned rank.
+  const TALENT_BRANCHES = {
+    faith: {
+      label: 'Faith', className: 'branch-faith', angle: -90,
+      nodes: [
+        { id: 'faith_1', name: 'Blessed Strikes', icon: '☀', desc: '+3 pulse damage per rank (max +12).', baseCost: 8, maxRank: 4, requires: null,
+          apply: p => p.attackDamage += 3 },
+        { id: 'faith_2', name: 'Wider Communion', icon: '◎', desc: '+10 pulse radius per rank (max +40).', baseCost: 15, maxRank: 4, requires: 'faith_1',
+          apply: p => p.attackRadius += 10 },
+        { id: 'faith_3', name: 'Rapid Rites', icon: '⚡', desc: 'Pulse cooldown 6% faster per rank.', baseCost: 22, maxRank: 4, requires: 'faith_2',
+          apply: p => p.attackCooldown = Math.max(0.3, p.attackCooldown * 0.94) },
+        { id: 'faith_4', name: 'Smite', icon: '🔥', desc: 'Unlocks Smite — an active bolt that strikes the nearest enemy for heavy damage.', baseCost: 45, maxRank: 1, requires: 'faith_3',
+          apply: p => grantAbility(p, 'smite') },
+      ]
+    },
+    vitality: {
+      label: 'Vitality', className: 'branch-vitality', angle: -18,
+      nodes: [
+        { id: 'vit_1', name: 'Hardened Faith', icon: '♥', desc: '+15 max HP per rank (max +60).', baseCost: 8, maxRank: 4, requires: null,
+          apply: p => { p.maxHp += 15; p.hp = p.maxHp; } },
+        { id: 'vit_2', name: 'Sanctified Body', icon: '➤', desc: '+6% move speed per rank.', baseCost: 15, maxRank: 4, requires: 'vit_1',
+          apply: p => p.speed *= 1.06 },
+        { id: 'vit_3', name: 'Undying Resolve', icon: '⏳', desc: '+0.15s invulnerability per rank.', baseCost: 22, maxRank: 4, requires: 'vit_2',
+          apply: p => p.invulnBonus = (p.invulnBonus || 0) + 0.15 },
+      ]
+    },
+    communion: {
+      label: 'Communion', className: 'branch-communion', angle: 126,
+      nodes: [
+        { id: 'comm_1', name: 'Wandering Soul', icon: '✦', desc: '+12 soul-orb pickup range per rank.', baseCost: 8, maxRank: 4, requires: null,
+          apply: p => p.pickupRadius += 12 },
+        { id: 'comm_2', name: 'Gathering Storm', icon: '✷', desc: '+5% experience gained per rank.', baseCost: 15, maxRank: 4, requires: 'comm_1',
+          apply: p => p.xpMultiplier = (p.xpMultiplier || 1) * 1.05 },
+      ]
+    },
+    light: {
+      label: 'Light', className: 'branch-light', requiresUnlock: 'light', angle: 54,
+      nodes: [
+        { id: 'light_gen_1', name: 'Radiant Aura', icon: '☼', desc: '+5 pulse damage per rank.', baseCost: 40, maxRank: 4, requires: null,
+          apply: p => p.attackDamage += 5 },
+        { id: 'light_gen_2', name: 'Sunward Step', icon: '✵', desc: '+4% move speed per rank.', baseCost: 55, maxRank: 4, requires: 'light_gen_1',
+          apply: p => p.speed *= 1.04 },
+      ]
+    },
+    shadow: {
+      label: 'Shadow', className: 'branch-shadow', requiresUnlock: 'shadow', angle: 198,
+      nodes: [
+        { id: 'shadow_gen_1', name: 'Grave Chill', icon: '☾', desc: '+6 pulse radius per rank.', baseCost: 40, maxRank: 4, requires: null,
+          apply: p => p.attackRadius += 6 },
+        { id: 'shadow_gen_2', name: 'Hungering Dark', icon: '✺', desc: '+3% experience gained per rank.', baseCost: 55, maxRank: 4, requires: 'shadow_gen_1',
+          apply: p => p.xpMultiplier = (p.xpMultiplier || 1) * 1.03 },
+      ]
+    },
+  };
+
+  // Deity talent trees: nodes are permanent once bought (never lost), but their apply()
+  // only takes effect while that deity is meta.deity (your currently active devotion).
+  const DEITY_TREES = {
+    light: {
+      label: 'The Radiant Dawn', className: 'deity-light',
+      desc: 'A god of order and purification. Burns the undead where it stands and mends the faithful who serve it.',
+      nodes: [
+        { id: 'light_1', name: 'Radiant Judgment', desc: 'Holy pulse also sears enemies for damage over time.', cost: 6, requires: null,
+          apply: p => p.dotDamage += 2 },
+        { id: 'light_2', name: 'Beacon of Hope', desc: 'Regenerate 1 HP per second.', cost: 10, requires: 'light_1',
+          apply: p => p.hpRegen += 1 },
+        { id: 'light_3', name: 'Purging Flame', desc: '+25% holy pulse damage.', cost: 16, requires: 'light_2',
+          apply: p => p.attackDamage = Math.round(p.attackDamage * 1.25) },
+        { id: 'light_4', name: 'Wrath of the Dawn', desc: 'Unlocks an active bolt of light that strikes the nearest enemy for heavy damage.', cost: 20, requires: 'light_3',
+          apply: p => grantAbility(p, 'wrath_of_dawn') },
+      ]
+    },
+    shadow: {
+      label: 'The Hollow Vigil', className: 'deity-shadow',
+      desc: 'A god of death and dominion. Lets the faithful raise the slain to fight anew and wither what still lives.',
+      nodes: [
+        { id: 'shadow_1', name: 'Reap the Fallen', desc: '25% chance a killed enemy rises as a spirit thrall, damaging nearby foes for 6s.', cost: 6, requires: null,
+          apply: p => p.reapChance += 0.25 },
+        { id: 'shadow_2', name: 'Withering Touch', desc: 'Enemies hit by your pulse are slowed for 2s.', cost: 10, requires: 'shadow_1',
+          apply: p => p.slowOnHit = 0.4 },
+        { id: 'shadow_3', name: 'Grim Harvest', desc: '+40% Faith earned this run.', cost: 16, requires: 'shadow_2',
+          apply: p => p.faithMultiplier *= 1.4 },
+        { id: 'shadow_4', name: 'Umbral Lance', desc: 'Unlocks an active bolt of dark force that damages and heavily slows the nearest enemy.', cost: 20, requires: 'shadow_3',
+          apply: p => grantAbility(p, 'umbral_lance') },
+      ]
+    },
+  };
+
+  function getRank(id) { return meta.talentRanks[id] || 0; }
+  function rankCost(baseCost, rank) { return Math.round(baseCost * (1 + (rank - 1) * 0.75)); }
+  function nodeRequirementMet(node) { return !node.requires || getRank(node.requires) >= 1; }
+  function branchUnlocked(branch) { return !branch.requiresUnlock || meta.unlockedBranches.includes(branch.requiresUnlock); }
+
+  function purchaseTalent(node, branch) {
+    const rank = getRank(node.id);
+    if (rank >= node.maxRank) return;
+    if (!branchUnlocked(branch)) return;
+    if (!nodeRequirementMet(node)) return;
+    const cost = rankCost(node.baseCost, rank + 1);
+    if (meta.essence < cost) return;
+    meta.essence -= cost;
+    meta.talentRanks[node.id] = rank + 1;
+    saveMeta();
+    renderTalentTree();
+    updateCurrencyDisplays();
+  }
+
+  function applyTalentsToPlayer() {
+    for (const branch of Object.values(TALENT_BRANCHES)) {
+      for (const node of branch.nodes) {
+        const rank = getRank(node.id);
+        for (let r = 0; r < rank; r++) node.apply(player);
+      }
+    }
+  }
+
+  function polarToXY(cx, cy, angleDeg, radius) {
+    const rad = angleDeg * Math.PI / 180;
+    return { x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) };
+  }
+
+  function drawRadialLine(container, x1, y1, x2, y2, active) {
+    const dx = x2 - x1, dy = y2 - y1;
+    const length = Math.hypot(dx, dy);
+    const angleDeg = Math.atan2(dy, dx) * 180 / Math.PI;
+    const line = document.createElement('div');
+    line.className = 'radial-line' + (active ? ' active' : '');
+    line.style.width = length + 'px';
+    line.style.left = x1 + 'px';
+    line.style.top = y1 + 'px';
+    line.style.transform = `rotate(${angleDeg}deg)`;
+    container.appendChild(line);
+  }
+
+  function renderTalentTree() {
+    const container = document.getElementById('talent-tree');
+    container.innerHTML = '';
+    const cx = 450, cy = 450;
+    const radiusSteps = [110, 200, 290, 380];
+
+    const hub = document.createElement('div');
+    hub.className = 'radial-hub tooltip-target';
+    hub.setAttribute('data-tooltip', 'Your talents radiate outward from here.');
+    hub.style.left = cx + 'px'; hub.style.top = cy + 'px';
+    hub.textContent = '✚';
+    container.appendChild(hub);
+
+    for (const [key, branch] of Object.entries(TALENT_BRANCHES)) {
+      const angle = branch.angle;
+
+      if (!branchUnlocked(branch)) {
+        const pos = polarToXY(cx, cy, angle, radiusSteps[0]);
+        drawRadialLine(container, cx, cy, pos.x, pos.y, false);
+        const deityName = DEITY_TREES[branch.requiresUnlock] ? DEITY_TREES[branch.requiresUnlock].label : branch.requiresUnlock;
+        const lockWrap = document.createElement('div');
+        lockWrap.className = 'radial-node-wrap';
+        lockWrap.style.left = pos.x + 'px'; lockWrap.style.top = pos.y + 'px';
+        const lockEl = document.createElement('div');
+        lockEl.className = `radial-node radial-locked tooltip-target branch-${key}`;
+        lockEl.setAttribute('data-tooltip', `${branch.label} (locked)\nPerform the Rite of Ordination while devoted to ${deityName} to unlock.`);
+        lockEl.textContent = '🔒';
+        lockWrap.appendChild(lockEl);
+        container.appendChild(lockWrap);
+        continue;
+      }
+
+      let prevX = cx, prevY = cy;
+      branch.nodes.forEach((node, idx) => {
+        const pos = polarToXY(cx, cy, angle, radiusSteps[idx]);
+        const rank = getRank(node.id);
+        const unlockedNode = nodeRequirementMet(node);
+        const maxed = rank >= node.maxRank;
+        drawRadialLine(container, prevX, prevY, pos.x, pos.y, rank > 0);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'radial-node-wrap';
+        wrap.style.left = pos.x + 'px'; wrap.style.top = pos.y + 'px';
+
+        const nodeEl = document.createElement('div');
+        const stateClass = maxed ? 'maxed' : rank > 0 ? 'ranked' : unlockedNode ? 'available' : 'locked';
+        nodeEl.className = `radial-node tooltip-target branch-${key} ${stateClass}`;
+        const nextCost = maxed ? null : rankCost(node.baseCost, rank + 1);
+        const tooltipText = `${node.name}\n${node.desc}\nRank ${rank}/${node.maxRank}` +
+          (maxed ? ' — MAXED' : unlockedNode ? ` — next rank: ✦${nextCost}` : ' — requires previous node');
+        nodeEl.setAttribute('data-tooltip', tooltipText);
+        nodeEl.textContent = node.icon;
+        if (unlockedNode && !maxed) nodeEl.onclick = () => { if (!talentDragSuppressClick) purchaseTalent(node, branch); };
+        wrap.appendChild(nodeEl);
+
+        const pips = document.createElement('div');
+        pips.className = 'radial-pips';
+        for (let i = 0; i < node.maxRank; i++) {
+          const pip = document.createElement('span');
+          pip.className = 'pip' + (i < rank ? ' filled' : '');
+          pips.appendChild(pip);
+        }
+        wrap.appendChild(pips);
+
+        container.appendChild(wrap);
+        prevX = pos.x; prevY = pos.y;
+      });
+    }
+  }
+
+  // ---------- Talent tree pan (click-and-drag navigation) ----------
+  let talentViewX = 0, talentViewY = 0;
+  let talentDragging = false, talentDragMoved = false, talentDragSuppressClick = false;
+  let talentDragStartX = 0, talentDragStartY = 0, talentDragOrigX = 0, talentDragOrigY = 0;
+
+  function applyTalentTransform() {
+    document.getElementById('talent-tree').style.transform = `translate(${talentViewX}px, ${talentViewY}px)`;
+  }
+
+  function centerTalentView() {
+    const viewport = document.getElementById('talent-viewport');
+    const rect = viewport.getBoundingClientRect();
+    talentViewX = rect.width / 2 - 450;
+    talentViewY = rect.height / 2 - 450;
+    applyTalentTransform();
+  }
+
+  (function setupTalentPan() {
+    const viewport = document.getElementById('talent-viewport');
+    viewport.addEventListener('mousedown', e => {
+      talentDragging = true;
+      talentDragMoved = false;
+      talentDragStartX = e.clientX; talentDragStartY = e.clientY;
+      talentDragOrigX = talentViewX; talentDragOrigY = talentViewY;
+      viewport.classList.add('dragging');
+    });
+    document.addEventListener('mousemove', e => {
+      if (!talentDragging) return;
+      const dx = e.clientX - talentDragStartX, dy = e.clientY - talentDragStartY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) talentDragMoved = true;
+      talentViewX = talentDragOrigX + dx;
+      talentViewY = talentDragOrigY + dy;
+      applyTalentTransform();
+    });
+    document.addEventListener('mouseup', () => {
+      if (!talentDragging) return;
+      talentDragging = false;
+      viewport.classList.remove('dragging');
+      if (talentDragMoved) {
+        talentDragSuppressClick = true;
+        setTimeout(() => { talentDragSuppressClick = false; }, 0);
+      }
+    });
+  })();
+
+  function updateCurrencyDisplays() {
+    document.getElementById('start-currency').textContent = meta.essence;
+    document.getElementById('start-faith').textContent = meta.faith;
+    document.getElementById('talent-currency').textContent = meta.essence;
+    document.getElementById('covenant-faith').textContent = meta.faith;
+  }
+
+  function essenceForRun() {
+    // Placeholder reward curve — tune once balancing pass happens.
+    return Math.round(wave * 3 + player.level * 2);
+  }
+
+  function faithForRun() {
+    if (!meta.deity) return 0;
+    return Math.round((wave * 1.5) * (player.faithMultiplier || 1));
+  }
+
+  // ---------- Covenant / Ordination (deity prestige tier) ----------
+  function isDeityPurchased(id) { return meta.deityPurchased.includes(id); }
+  function deityNodeRequirementMet(node) { return !node.requires || isDeityPurchased(node.requires); }
+
+  function selectDeity(id) {
+    meta.deity = id;
+    saveMeta();
+    renderCovenant();
+    updateCurrencyDisplays();
+  }
+
+  function purchaseDeityNode(node) {
+    if (isDeityPurchased(node.id)) return;
+    if (!deityNodeRequirementMet(node)) return;
+    if (meta.faith < node.cost) return;
+    meta.faith -= node.cost;
+    meta.deityPurchased.push(node.id);
+    saveMeta();
+    renderCovenant();
+    updateCurrencyDisplays();
+  }
+
+  function performOrdination() {
+    if (!meta.deity) return;
+    if (!meta.unlockedBranches.includes(meta.deity)) {
+      meta.unlockedBranches.push(meta.deity);
+    }
+    meta.deity = null; // free to choose again (same or different) for the next run
+    saveMeta();
+    renderCovenant();
+    updateCurrencyDisplays();
+  }
+
+  function applyDeityToPlayer() {
+    if (!meta.deity) return;
+    const tree = DEITY_TREES[meta.deity];
+    for (const node of tree.nodes) {
+      if (isDeityPurchased(node.id)) node.apply(player);
+    }
+  }
+
+  function renderCovenant() {
+    const selectEl = document.getElementById('deity-select');
+    const activeEl = document.getElementById('active-deity-block');
+
+    if (!meta.deity) {
+      activeEl.style.display = 'none';
+      selectEl.style.display = 'flex';
+      selectEl.innerHTML = '';
+      for (const [id, deity] of Object.entries(DEITY_TREES)) {
+        const card = document.createElement('div');
+        card.className = `deity-card deity-${id}`;
+        card.innerHTML = `<div class="deity-name">${deity.label}</div><div class="deity-desc">${deity.desc}</div>`;
+        card.onclick = () => selectDeity(id);
+        selectEl.appendChild(card);
+      }
+    } else {
+      selectEl.style.display = 'none';
+      activeEl.style.display = 'block';
+      const deity = DEITY_TREES[meta.deity];
+      document.getElementById('active-deity-name').textContent = `Devoted to ${deity.label}`;
+      renderDeityTree();
+    }
+  }
+
+  function renderDeityTree() {
+    const container = document.getElementById('deity-talent-tree');
+    container.innerHTML = '';
+    const deity = DEITY_TREES[meta.deity];
+    const col = document.createElement('div');
+    col.className = `branch-column`;
+    deity.nodes.forEach((node, idx) => {
+      if (idx > 0) {
+        const connector = document.createElement('div');
+        connector.className = 'tree-connector';
+        col.appendChild(connector);
+      }
+      const purchased = isDeityPurchased(node.id);
+      const unlocked = deityNodeRequirementMet(node);
+      const el = document.createElement('div');
+      el.className = 'talent-node ' + (purchased ? 'purchased' : unlocked ? 'available' : 'locked');
+      el.innerHTML = `<div class="t-name">${node.name}</div><div class="t-desc">${node.desc}</div><div class="t-cost">☾ ${node.cost}</div>`;
+      if (unlocked && !purchased) el.onclick = () => purchaseDeityNode(node);
+      col.appendChild(el);
+    });
+    container.appendChild(col);
+  }
+
+  // ---------- Wave setup ----------
+  function startWave(w) {
+    wave = w;
+    waveEnemiesTotal = 5 + w * 3;
+    waveEnemiesSpawned = 0;
+    waveEnemiesRemaining = waveEnemiesTotal;
+    spawnTimer = 0;
+    inWaveTransition = false;
+    document.getElementById('wave-title').textContent = `Wave ${wave}`;
+    const subs = ['Ghouls stir in the dark...', 'Bones rattle in the dust...', 'Something older wakes...', 'The dead do not rest...'];
+    document.getElementById('wave-sub').textContent = subs[Math.min(3, Math.floor(w/3))];
+  }
+
+  function spawnEnemy() {
+    const types = unlockedTypes(wave);
+    const typeKey = types[Math.floor(Math.random() * types.length)];
+    const template = ENEMY_TYPES[typeKey];
+    const scale = 1 + (wave - 1) * 0.09;
+
+    // spawn just outside the visible screen, in world space around player
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.max(canvas.width, canvas.height) * 0.65;
+    const x = player.x + Math.cos(angle) * dist;
+    const y = player.y + Math.sin(angle) * dist;
+
+    enemies.push({
+      type: typeKey, x, y,
+      radius: template.radius,
+      hp: template.hp * scale,
+      maxHp: template.hp * scale,
+      speed: template.speed,
+      damage: template.damage * scale,
+      xp: Math.round(template.xp * (1 + (wave-1)*0.12)),
+      color: template.color, glow: template.glow,
+      hitFlash: 0,
+      contactCooldown: 0,
+      burnTimer: 0, burnDps: 0, slowTimer: 0, slowFactor: 0,
+    });
+    waveEnemiesSpawned++;
+  }
+
+  // ---------- Input / movement ----------
+  function getMoveVector() {
+    let dx = 0, dy = 0;
+    if (keys['w'] || keys['arrowup']) dy -= 1;
+    if (keys['s'] || keys['arrowdown']) dy += 1;
+    if (keys['a'] || keys['arrowleft']) dx -= 1;
+    if (keys['d'] || keys['arrowright']) dx += 1;
+    const len = Math.hypot(dx, dy);
+    if (len > 0) { dx /= len; dy /= len; }
+    return { dx, dy };
+  }
+
+  // ---------- Combat ----------
+  function spawnDamagePopup(x, y, amount, color) {
+    dmgPopups.push({ x, y, amount: Math.round(amount), life: 0.7, vy: -55, color: color || '#fff' });
+  }
+
+  function damageEnemy(e, amount, color) {
+    e.hp -= amount;
+    e.hitFlash = 0.15;
+    spawnDamagePopup(e.x, e.y, amount, color);
+  }
+
+  function doHolyPulse() {
+    pulses.push({ x: player.x, y: player.y, radius: 0, maxRadius: player.attackRadius, life: 0.4 });
+    for (const e of enemies) {
+      const d = Math.hypot(e.x - player.x, e.y - player.y);
+      if (d <= player.attackRadius) {
+        damageEnemy(e, player.attackDamage, ABILITY_DEFS.holy_pulse.color);
+        if (player.dotDamage > 0) { e.burnTimer = 3; e.burnDps = player.dotDamage; }
+        if (player.slowOnHit > 0) { e.slowTimer = 2; e.slowFactor = player.slowOnHit; }
+      }
+    }
+  }
+
+  function castTargetedAbility(ability) {
+    if (enemies.length === 0) { ability.cooldownTimer = 0.3; return; } // retry soon rather than the full cooldown
+    let nearest = null, nearestDist = Infinity;
+    for (const e of enemies) {
+      const d = Math.hypot(e.x - player.x, e.y - player.y);
+      if (d < nearestDist) { nearestDist = d; nearest = e; }
+    }
+    const dx = nearest.x - player.x, dy = nearest.y - player.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    projectiles.push({
+      x: player.x, y: player.y,
+      vx: (dx / dist) * ability.stats.speed,
+      vy: (dy / dist) * ability.stats.speed,
+      targetX: nearest.x, targetY: nearest.y,
+      damage: ability.stats.damage, radius: ability.stats.radius, color: ability.color,
+      abilityId: ability.id,
+    });
+    ability.cooldownTimer = ability.stats.cooldown; // cooldown starts on cast, not on impact
+  }
+
+  function resolveProjectileImpact(proj) {
+    bursts.push({ x: proj.x, y: proj.y, radius: 0, maxRadius: proj.radius, life: 0.3, color: proj.color });
+    for (const e of enemies) {
+      if (Math.hypot(e.x - proj.x, e.y - proj.y) <= proj.radius) {
+        damageEnemy(e, proj.damage, proj.color);
+        if (proj.abilityId === 'umbral_lance') { e.slowTimer = 2.5; e.slowFactor = 0.55; }
+      }
+    }
+  }
+
+  function castAbility(ability) {
+    if (ability.id === 'holy_pulse') {
+      doHolyPulse();
+      ability.cooldownTimer = player.attackCooldown;
+    } else if (ability.kind === 'targeted') {
+      castTargetedAbility(ability);
+    }
+  }
+
+  function killEnemy(e) {
+    orbs.push({ x: e.x, y: e.y, value: e.xp, radius: 5, bob: Math.random()*Math.PI*2 });
+    if (player.reapChance > 0 && Math.random() < player.reapChance) {
+      thralls.push({ x: e.x, y: e.y, radius: 70, dps: 6, timer: 6, tickTimer: 0 });
+    }
+  }
+
+  function gainXp(amount) {
+    player.xp += Math.round(amount * (player.xpMultiplier || 1));
+    while (player.xp >= player.xpToNext) {
+      player.xp -= player.xpToNext;
+      player.level++;
+      player.xpToNext = Math.round(10 + player.level * 6.5);
+      triggerLevelUp();
+    }
+  }
+
+  function triggerLevelUp() {
+    state = 'levelup';
+    const choices = pickUpgrades(3);
+    const container = document.getElementById('choices');
+    container.innerHTML = '';
+    choices.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'choice-card';
+      card.innerHTML = `<div class="choice-icon">${c.icon}</div><div class="choice-name">${c.name}</div><div class="choice-desc">${c.desc}</div>`;
+      card.onclick = () => {
+        c.apply();
+        document.getElementById('levelup-overlay').style.display = 'none';
+        state = 'playing';
+      };
+      container.appendChild(card);
+    });
+    document.getElementById('levelup-overlay').style.display = 'flex';
+  }
+
+  // ---------- Update ----------
+  function update(dt) {
+    elapsedGameTime += dt;
+
+    // movement
+    const { dx, dy } = getMoveVector();
+    player.x += dx * player.speed * dt;
+    player.y += dy * player.speed * dt;
+
+    // abilities
+    for (const ability of player.abilities) {
+      ability.cooldownTimer -= dt;
+      if (ability.cooldownTimer <= 0) castAbility(ability);
+    }
+    if (player.invuln > 0) player.invuln -= dt;
+
+    // spawning
+    if (!inWaveTransition) {
+      spawnTimer -= dt;
+      const spawnInterval = Math.max(0.35, 1.1 - wave * 0.04);
+      if (spawnTimer <= 0 && waveEnemiesSpawned < waveEnemiesTotal) {
+        spawnEnemy();
+        spawnTimer = spawnInterval;
+      }
+      if (waveEnemiesSpawned >= waveEnemiesTotal && enemies.length === 0) {
+        inWaveTransition = true;
+        waveTransitionTimer = 2.2;
+      }
+    } else {
+      waveTransitionTimer -= dt;
+      if (waveTransitionTimer <= 0) startWave(wave + 1);
+    }
+
+    // enemies
+    for (let i = enemies.length - 1; i >= 0; i--) {
+      const e = enemies[i];
+      const slowMult = (e.slowTimer > 0) ? (1 - e.slowFactor) : 1;
+      const ddx = player.x - e.x, ddy = player.y - e.y;
+      const d = Math.hypot(ddx, ddy) || 1;
+      e.x += (ddx / d) * e.speed * slowMult * dt;
+      e.y += (ddy / d) * e.speed * slowMult * dt;
+      if (e.hitFlash > 0) e.hitFlash -= dt;
+      if (e.contactCooldown > 0) e.contactCooldown -= dt;
+      if (e.slowTimer > 0) e.slowTimer -= dt;
+      if (e.burnTimer > 0) {
+        e.hp -= e.burnDps * dt;
+        e.burnTimer -= dt;
+      }
+
+      // contact damage
+      if (d < e.radius + player.radius && e.contactCooldown <= 0) {
+        if (player.invuln <= 0) {
+          player.hp -= e.damage;
+          player.invuln = 0.6 + (player.invulnBonus || 0);
+        }
+        e.contactCooldown = 0.6;
+      }
+
+      if (e.hp <= 0) {
+        killEnemy(e);
+        enemies.splice(i, 1);
+        waveEnemiesRemaining--;
+      }
+    }
+
+    // thralls (raised undead allies from Reap the Fallen)
+    for (let i = thralls.length - 1; i >= 0; i--) {
+      const t = thralls[i];
+      t.timer -= dt;
+      t.tickTimer -= dt;
+      if (t.tickTimer <= 0) {
+        for (const e of enemies) {
+          if (Math.hypot(e.x - t.x, e.y - t.y) <= t.radius) damageEnemy(e, t.dps, '#d68fe8');
+        }
+        t.tickTimer = 0.5;
+      }
+      if (t.timer <= 0) thralls.splice(i, 1);
+    }
+
+    // passive HP regen (Light devotion)
+    if (player.hpRegen > 0 && player.hp < player.maxHp) {
+      player.hp = Math.min(player.maxHp, player.hp + player.hpRegen * dt);
+    }
+
+    // orbs
+    for (let i = orbs.length - 1; i >= 0; i--) {
+      const o = orbs[i];
+      o.bob += dt * 4;
+      const d = Math.hypot(player.x - o.x, player.y - o.y);
+      if (d < player.pickupRadius) {
+        const pull = 380 * dt;
+        const ang = Math.atan2(player.y - o.y, player.x - o.x);
+        o.x += Math.cos(ang) * pull;
+        o.y += Math.sin(ang) * pull;
+      }
+      if (d < player.radius + 6) {
+        gainXp(o.value);
+        orbs.splice(i, 1);
+      }
+    }
+
+    // pulses (visual)
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i];
+      p.life -= dt;
+      p.radius = p.maxRadius * (1 - p.life / 0.4);
+      if (p.life <= 0) pulses.splice(i, 1);
+    }
+
+    // projectiles — travel toward their target point, resolve impact on arrival
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      const proj = projectiles[i];
+      const remaining = Math.hypot(proj.targetX - proj.x, proj.targetY - proj.y);
+      const step = Math.hypot(proj.vx, proj.vy) * dt;
+      if (step >= remaining) {
+        proj.x = proj.targetX; proj.y = proj.targetY;
+        resolveProjectileImpact(proj);
+        projectiles.splice(i, 1);
+      } else {
+        proj.x += proj.vx * dt;
+        proj.y += proj.vy * dt;
+      }
+    }
+
+    // ability impact bursts (visual)
+    for (let i = bursts.length - 1; i >= 0; i--) {
+      const b = bursts[i];
+      b.life -= dt;
+      b.radius = b.maxRadius * (1 - b.life / 0.3);
+      if (b.life <= 0) bursts.splice(i, 1);
+    }
+
+    // damage number popups
+    for (let i = dmgPopups.length - 1; i >= 0; i--) {
+      const p = dmgPopups[i];
+      p.life -= dt;
+      p.y += p.vy * dt;
+      p.vy *= 0.94;
+      if (p.life <= 0) dmgPopups.splice(i, 1);
+    }
+
+    // death check
+    if (player.hp <= 0) {
+      finishRun();
+    }
+
+    updateHud();
+  }
+
+  function awardRunCurrency() {
+    const earned = essenceForRun();
+    const faithEarned = faithForRun();
+    meta.essence += earned;
+    meta.faith += faithEarned;
+    saveMeta();
+    updateCurrencyDisplays();
+    return { earned, faithEarned };
+  }
+
+  function finishRun() {
+    state = 'gameover';
+    const { earned, faithEarned } = awardRunCurrency();
+    document.getElementById('gameover-title').textContent = 'You Have Fallen';
+    document.getElementById('gameover-stats').textContent =
+      `Survived ${wave} wave${wave===1?'':'s'} — reached level ${player.level}.`;
+    document.getElementById('gameover-essence').textContent =
+      faithEarned > 0 ? `+${earned} Soul Essence, +${faithEarned} Faith` : `+${earned} Soul Essence`;
+    document.getElementById('gameover-overlay').style.display = 'flex';
+    document.getElementById('menu-btn').style.display = 'none';
+  }
+
+  function updateHud() {
+    document.getElementById('hp-fill').style.width = Math.max(0, (player.hp / player.maxHp) * 100) + '%';
+    document.getElementById('hp-text').textContent = `${Math.max(0, Math.round(player.hp))}/${player.maxHp}`;
+    document.getElementById('xp-fill').style.width = (player.xp / player.xpToNext) * 100 + '%';
+    document.getElementById('xp-text').textContent = `${player.xp}/${player.xpToNext}`;
+    document.getElementById('level-text').textContent = player.level;
+    document.getElementById('run-essence-text').textContent = essenceForRun();
+    const faithLine = document.getElementById('run-faith-line');
+    if (meta.deity) {
+      faithLine.style.display = 'block';
+      document.getElementById('run-faith-text').textContent = faithForRun();
+    } else {
+      faithLine.style.display = 'none';
+    }
+  }
+
+  // ---------- Render ----------
+  function worldToScreen(x, y) {
+    return { x: x - player.x + canvas.width / 2, y: y - player.y + canvas.height / 2 };
+  }
+
+  function drawBackgroundGrid() {
+    const size = 64;
+    ctx.strokeStyle = 'rgba(201,164,76,0.06)';
+    ctx.lineWidth = 1;
+    const offsetX = ((-player.x) % size + size) % size;
+    const offsetY = ((-player.y) % size + size) % size;
+    for (let x = offsetX; x < canvas.width; x += size) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = offsetY; y < canvas.height; y += size) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackgroundGrid();
+
+    // pulses
+    for (const p of pulses) {
+      const s = worldToScreen(p.x, p.y);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, p.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(143,214,255,${Math.max(0, p.life / 0.4 * 0.8)})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    // projectiles (travelling bolts)
+    for (const proj of projectiles) {
+      const s = worldToScreen(proj.x, proj.y);
+      const angle = Math.atan2(proj.vy, proj.vx);
+      const tailX = s.x - Math.cos(angle) * 14, tailY = s.y - Math.sin(angle) * 14;
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(s.x, s.y);
+      ctx.strokeStyle = proj.color;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = proj.color;
+      ctx.shadowColor = proj.color; ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // ability impact bursts
+    for (const b of bursts) {
+      const s = worldToScreen(b.x, b.y);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, b.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = b.color;
+      ctx.globalAlpha = Math.max(0, b.life / 0.3);
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    // orbs
+    for (const o of orbs) {
+      const s = worldToScreen(o.x, o.y);
+      const bobY = Math.sin(o.bob) * 3;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y + bobY, o.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#8fd6ff';
+      ctx.shadowColor = '#8fd6ff'; ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // thralls (raised undead allies)
+    for (const t of thralls) {
+      const s = worldToScreen(t.x, t.y);
+      const pulseAmt = 0.7 + Math.sin(t.timer * 6) * 0.3;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, 10 * pulseAmt, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(214,143,232,0.8)';
+      ctx.shadowColor = '#d68fe8'; ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, t.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(214,143,232,0.15)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // enemies
+    for (const e of enemies) {
+      const s = worldToScreen(e.x, e.y);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, e.radius, 0, Math.PI * 2);
+      ctx.fillStyle = e.hitFlash > 0 ? '#ffffff' : (e.burnTimer > 0 ? '#e8622f' : e.color);
+      ctx.shadowColor = e.glow; ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      // hp sliver
+      const hpPct = Math.max(0, e.hp / e.maxHp);
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillRect(s.x - e.radius, s.y - e.radius - 8, e.radius * 2, 4);
+      ctx.fillStyle = '#c73f3f';
+      ctx.fillRect(s.x - e.radius, s.y - e.radius - 8, e.radius * 2 * hpPct, 4);
+    }
+
+    // player
+    const ps = { x: canvas.width / 2, y: canvas.height / 2 };
+    ctx.beginPath();
+    ctx.arc(ps.x, ps.y, player.radius, 0, Math.PI * 2);
+    ctx.fillStyle = player.invuln > 0 ? 'rgba(232,200,116,0.5)' : '#e8c874';
+    ctx.shadowColor = '#fff2c7'; ctx.shadowBlur = 14;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    // simple holy symbol (cross)
+    ctx.strokeStyle = '#1a1300';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(ps.x, ps.y - 8); ctx.lineTo(ps.x, ps.y + 8);
+    ctx.moveTo(ps.x - 6, ps.y - 2); ctx.lineTo(ps.x + 6, ps.y - 2);
+    ctx.stroke();
+
+    // damage number popups (drawn last, on top of everything)
+    ctx.font = 'bold 15px sans-serif';
+    ctx.textAlign = 'center';
+    for (const p of dmgPopups) {
+      const s = worldToScreen(p.x, p.y);
+      ctx.globalAlpha = Math.max(0, p.life / 0.7);
+      ctx.fillStyle = p.color;
+      ctx.fillText(p.amount, s.x, s.y);
+      ctx.globalAlpha = 1;
+    }
+    ctx.textAlign = 'start';
+  }
+
+  // ---------- Loop ----------
+  function loop(ts) {
+    const dt = Math.min(0.05, (ts - lastTime) / 1000 || 0);
+    lastTime = ts;
+    if (state === 'playing') update(dt);
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  // ---------- Start / Restart ----------
+  function resetGame() {
+    player.x = 0; player.y = 0;
+    player.hp = 100; player.maxHp = 100;
+    player.level = 1; player.xp = 0; player.xpToNext = 10;
+    player.attackDamage = 12; player.attackRadius = 95;
+    player.attackCooldown = 1.3;
+    player.pickupRadius = 50; player.speed = 175; player.invuln = 0;
+    player.invulnBonus = 0; player.xpMultiplier = 1;
+    player.dotDamage = 0; player.hpRegen = 0; player.reapChance = 0;
+    player.slowOnHit = 0; player.faithMultiplier = 1;
+    player.abilities = [];
+    enemies = []; orbs = []; pulses = []; thralls = []; dmgPopups = []; bursts = []; projectiles = [];
+    grantAbility(player, 'holy_pulse');
+    applyTalentsToPlayer();
+    applyDeityToPlayer();
+    renderAbilityBar();
+    startWave(1);
+  }
+
+  function renderAbilityBar() {
+    const bar = document.getElementById('ability-bar');
+    bar.innerHTML = '';
+    for (const a of player.abilities) {
+      const el = document.createElement('span');
+      el.className = 'ability-icon';
+      el.textContent = a.icon;
+      el.title = `${a.name} — ${ABILITY_DEFS[a.id].desc}`;
+      bar.appendChild(el);
+    }
+  }
+
+  document.getElementById('start-btn').onclick = () => {
+    document.getElementById('start-overlay').style.display = 'none';
+    document.getElementById('hud').style.display = 'flex';
+    document.getElementById('controls-hint').style.display = 'block';
+    document.getElementById('menu-btn').style.display = 'block';
+    resetGame();
+    state = 'playing';
+  };
+
+  document.getElementById('restart-btn').onclick = () => {
+    document.getElementById('gameover-overlay').style.display = 'none';
+    document.getElementById('menu-btn').style.display = 'block';
+    resetGame();
+    state = 'playing';
+  };
+
+  document.getElementById('menu-btn').onclick = () => {
+    if (state === 'playing') {
+      state = 'paused';
+      document.getElementById('pause-overlay').style.display = 'flex';
+    }
+  };
+
+  document.getElementById('resume-btn').onclick = () => {
+    document.getElementById('pause-overlay').style.display = 'none';
+    state = 'playing';
+  };
+
+  document.getElementById('pause-talents-btn').onclick = () => {
+    awardRunCurrency();
+    document.getElementById('pause-overlay').style.display = 'none';
+    document.getElementById('menu-btn').style.display = 'none';
+    state = 'menu';
+    renderTalentTree();
+    document.getElementById('talent-overlay').style.display = 'flex';
+    centerTalentView();
+  };
+
+  document.getElementById('gameover-talents-btn').onclick = () => {
+    document.getElementById('gameover-overlay').style.display = 'none';
+    renderTalentTree();
+    updateCurrencyDisplays();
+    document.getElementById('talent-overlay').style.display = 'flex';
+    centerTalentView();
+  };
+
+  document.getElementById('talents-btn').onclick = () => {
+    document.getElementById('start-overlay').style.display = 'none';
+    renderTalentTree();
+    updateCurrencyDisplays();
+    document.getElementById('talent-overlay').style.display = 'flex';
+    centerTalentView();
+  };
+
+  document.getElementById('close-talents-btn').onclick = () => {
+    document.getElementById('talent-overlay').style.display = 'none';
+    document.getElementById('start-overlay').style.display = 'flex';
+    updateCurrencyDisplays();
+  };
+
+  document.getElementById('covenant-btn').onclick = () => {
+    document.getElementById('start-overlay').style.display = 'none';
+    renderCovenant();
+    updateCurrencyDisplays();
+    document.getElementById('covenant-overlay').style.display = 'flex';
+  };
+
+  document.getElementById('close-covenant-btn').onclick = () => {
+    document.getElementById('covenant-overlay').style.display = 'none';
+    document.getElementById('start-overlay').style.display = 'flex';
+    updateCurrencyDisplays();
+  };
+
+  document.getElementById('ordination-btn').onclick = () => {
+    performOrdination();
+  };
+
+  updateCurrencyDisplays();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
