@@ -101,7 +101,7 @@ Reset your current run to earn permanent progression, unlocking stronger builds 
 
 <div style="text-align:center; margin:40px 0;">
 
-<a href="/games/dungeon-cleric/"
+<a href="/assets/games/undead-uprising.html"
    target="_blank"
    rel="noopener"
    style="
