@@ -16,12 +16,6 @@ image: /assets/images/projects/dungeon-cleric/cover.png
 link: /assets/games/undead-uprising.html
 ---
 
-# Dungeon Cleric
-
-> A browser-based incremental RPG where you take on the role of a holy cleric fighting endless hordes of the undead. Defeat enemies, unlock divine powers, collect equipment, and become stronger through permanent progression.
-
----
-
 # Overview
 
 Dungeon Cleric is an incremental RPG built entirely with HTML, CSS and JavaScript. Inspired by idle games, action RPGs and classic dungeon crawlers, the game focuses on rewarding long-term progression while still offering satisfying moment-to-moment combat.
