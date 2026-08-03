@@ -27,23 +27,6 @@ const revealObserver = new IntersectionObserver(
 document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
 /* ============================================
-   SKILL BAR ANIMATION
-   One-shot: animates in once when visible.
-   ============================================ */
-const barObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('skill-bars--animate');
-        barObserver.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.3 }
-);
-document.querySelectorAll('.skill-bars').forEach((el) => barObserver.observe(el));
-
-/* ============================================
    ANIMATED STAT COUNTERS
    Counts up from 0 to the target number when
    the stats block scrolls into view.
