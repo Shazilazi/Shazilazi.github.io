@@ -1,47 +1,70 @@
 ---
 layout: default
-title: Projects
-permalink: /projects/
 ---
 
-<section class="section" style="border-bottom: none;">
-  <div class="container">
-    <div class="section__header">
-      <h1 class="section__title">All projects</h1>
+<article class="project-detail">
+  <header class="project-detail__header">
+    <a href="/projects/" class="back-link">← All projects</a>
+    <div class="project-detail__meta">
+      <span class="tag">{{ page.category }}</span>
+      <span class="project-detail__date">{{ page.date | date: "%B %Y" }}</span>
     </div>
-
-    {% assign categories = site.projects | map: "category" | compact | uniq | sort %}
-    {% if categories.size > 1 %}
-      <div class="filter-bar" role="group" aria-label="Filter projects by category">
-        <button type="button" class="filter-chip is-active" data-filter="all">All</button>
-        {% for cat in categories %}
-          <button type="button" class="filter-chip" data-filter="{{ cat }}">{{ cat }}</button>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    <div class="projects-grid" id="projects-grid">
-      {% for project in site.projects %}
-        <a href="{{ project.url | relative_url }}" class="project-card" data-category="{{ project.category | default: "Project" }}">
-          {% if project.image %}
-            <div class="project-card__image">
-              <img src="{{ project.image | relative_url }}" alt="{{ project.title }}" loading="lazy" />
-            </div>
-          {% endif %}
-          <span class="project-card__category">{{ project.category | default: "Project" }}</span>
-          <h2 class="project-card__title">{{ project.title }}</h2>
-          <p class="project-card__summary">{{ project.summary }}</p>
-          {% if project.tools %}
-            <div class="project-card__tools">
-              {% for tool in project.tools %}
-                <span class="tool-badge">{{ tool }}</span>
-              {% endfor %}
-            </div>
-          {% endif %}
-        </a>
+    <h1 class="project-detail__title">{{ page.title }}</h1>
+    <p class="project-detail__summary">{{ page.summary }}</p>
+    {% if page.tools %}
+    <div class="project-detail__tools">
+      {% for tool in page.tools %}
+        <span class="tool-badge">{{ tool }}</span>
       {% endfor %}
     </div>
+    {% endif %}
+    {% if page.link %}
+    <a href="{{ page.link }}" class="btn" target="_blank" rel="noopener">View project →</a>
+    {% endif %}
+  </header>
 
-    <p class="empty-state" id="projects-empty" style="display: none;">No projects in this category yet.</p>
+  {% if page.image %}
+  <div class="project-detail__image">
+    <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" />
   </div>
-</section>
+  {% endif %}
+
+  <div class="project-detail__body">
+    {{ content }}
+  </div>
+
+  {% assign sorted_projects = site.projects | sort: "date" | reverse %}
+  {% assign total = sorted_projects.size %}
+  {% for project in sorted_projects %}
+    {% if project.url == page.url %}
+      {% assign current_index = forloop.index0 %}
+    {% endif %}
+  {% endfor %}
+  {% assign prev_index = current_index | minus: 1 %}
+  {% assign next_index = current_index | plus: 1 %}
+  {% if prev_index >= 0 %}
+    {% assign prev_project = sorted_projects[prev_index] %}
+  {% endif %}
+  {% if next_index < total %}
+    {% assign next_project = sorted_projects[next_index] %}
+  {% endif %}
+
+  {% if prev_project or next_project %}
+  <nav class="project-nav">
+    {% if prev_project %}
+      <a href="{{ prev_project.url | relative_url }}" class="project-nav__link project-nav__link--prev">
+        <span class="project-nav__label">← Previous</span>
+        <span class="project-nav__title">{{ prev_project.title }}</span>
+      </a>
+    {% else %}
+      <span class="project-nav__spacer"></span>
+    {% endif %}
+    {% if next_project %}
+      <a href="{{ next_project.url | relative_url }}" class="project-nav__link project-nav__link--next">
+        <span class="project-nav__label">Next →</span>
+        <span class="project-nav__title">{{ next_project.title }}</span>
+      </a>
+    {% endif %}
+  </nav>
+  {% endif %}
+</article>
