@@ -12,13 +12,7 @@ link: https://github.com/Shazilazi/personal-finance-report
 image: /assets/images/projects/personal-finance-report/cover.png
 ---
 
-# Personal Budget Dashboard
-
-> An interactive Power BI dashboard developed to help my household track income, expenses, budgets, and savings through a practical, easy-to-maintain reporting solution.
-
 ![Dashboard Overview](/assets/images/projects/personal-finance-report/dashboard-overview.png)
-
----
 
 # Overview
 
