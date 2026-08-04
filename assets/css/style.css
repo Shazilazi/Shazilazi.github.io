@@ -829,52 +829,13 @@ body::after {
 }
 
 /* ============================================
-   PROJECT PREV/NEXT NAV
+   PROJECT RETURN CTA
    ============================================ */
-.project-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.project-return {
   margin-top: 3rem;
   padding-top: 2.5rem;
   border-top: 1px solid var(--border);
-}
-.project-nav__link {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 1.25rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  text-decoration: none;
-  transition: border-color 0.2s, transform 0.2s;
-}
-.project-nav__link:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  text-decoration: none;
-}
-.project-nav__link--next {
-  grid-column: 2;
-  text-align: right;
-  align-items: flex-end;
-}
-.project-nav__label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--accent2);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.project-nav__title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text);
-}
-@media (max-width: 600px) {
-  .project-nav { grid-template-columns: 1fr; }
-  .project-nav__link--next { grid-column: 1; text-align: left; align-items: flex-start; }
+  text-align: center;
 }
 
 /* ============================================
