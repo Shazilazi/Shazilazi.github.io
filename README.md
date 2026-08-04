@@ -17,6 +17,7 @@ Automatically built and deployed to GitHub Pages on every push to `main`.
 
 - **CV download** — the About page sidebar has a "Download CV" button linking to `assets/files/caleb-trent-cv.pdf`. Replace that file with your real CV (same filename) to update it, or change the path via `site.author.cv` in `_config.yml`.
 - **Project filtering** — the Projects page auto-generates a filter bar from every unique `category` used across `_projects/`. No extra config needed; add a project with a new category and a chip appears automatically.
+- **Project ordering** — projects (on the homepage's featured section and the full Projects grid) are sorted by `priority` (lower number = shown first), then by `date` (newest first) within the same priority. Projects with no `priority` set are sorted after all ranked ones. Logic lives in `_includes/sorted-projects.html`.
 - **Social preview image (Open Graph)** — `assets/images/og-image.png` is the default image shown when the site is shared on LinkedIn, WhatsApp, etc. It's wired up via `site.image` in `_config.yml` (used by the `jekyll-seo-tag` plugin). Individual pages or projects can override it by setting their own `image:` in front matter.
 
 ## Adding a project
@@ -31,6 +32,7 @@ summary: "One sentence describing what you built and why."
 category: "Dashboard"        # e.g. Dashboard, EDA, Forecasting, Automation
 date: 2024-01-01
 featured: true               # show on homepage (max 3)
+priority: 1                  # lower = more important. Same priority? newest date wins. Omit to sort last.
 tools: [Python, SQL, Power BI]
 link: https://github.com/...  # optional
 ---
