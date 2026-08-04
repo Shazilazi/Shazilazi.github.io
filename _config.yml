@@ -1,13 +1,12 @@
-title: "Caleb"
+title: "Caleb Trent"
 tagline: "Data Analyst"
 description: "Portfolio showcasing data analytics, visualisation, and insights work."
 url: "https://shazilazi.github.io"
 baseurl: ""
 
 author:
-  name: "Caleb"
+  name: "Caleb Trent"
   role: "Data Analyst"
-  bio: "I turn messy data into clear decisions."
   location: "Port Elizabeth, South Africa"
   linkedin: "https://www.linkedin.com/in/caleb-trent-aa6ba915a/"
   github: "https://github.com/Shazilazi"
