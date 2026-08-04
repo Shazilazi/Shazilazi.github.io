@@ -1,0 +1,18 @@
+{% comment %}
+  Builds `sorted_projects`: all site.projects ordered by
+  1) priority (ascending — 1 is more important than 2), then
+  2) date (descending — newest first) within the same priority.
+  Projects with no `priority` set are placed after all ranked
+  projects, sorted by date among themselves.
+
+  Usage: {% include sorted-projects.html %}
+  Then use the `sorted_projects` variable.
+{% endcomment %}
+{% assign date_sorted = site.projects | sort: "date" | reverse %}
+{% assign sorted_projects = "" | split: "," %}
+{% for i in (1..20) %}
+  {% assign tier = date_sorted | where: "priority", i %}
+  {% assign sorted_projects = sorted_projects | concat: tier %}
+{% endfor %}
+{% assign unranked = date_sorted | where_exp: "item", "item.priority == nil" %}
+{% assign sorted_projects = sorted_projects | concat: unranked %}
