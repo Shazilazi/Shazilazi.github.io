@@ -5,6 +5,7 @@ summary: "Designed and built a personal finance reporting solution in Power BI u
 category: "Dashboard"
 date: 2026-01-01
 featured: true
+priority: 1
 tools: [Power BI, Power Query, DAX, Google Sheets, Google Forms]
 link: https://github.com/Shazilazi/personal-finance-report
 
@@ -12,7 +13,13 @@ link: https://github.com/Shazilazi/personal-finance-report
 image: /assets/images/projects/personal-finance-report/cover.png
 ---
 
+# Personal Budget Dashboard
+
+> An interactive Power BI dashboard developed to help my household track income, expenses, budgets, and savings through a practical, easy-to-maintain reporting solution.
+
 ![Dashboard Overview](/assets/images/projects/personal-finance-report/dashboard-overview.png)
+
+---
 
 # Overview
 
