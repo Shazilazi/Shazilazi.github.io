@@ -21,8 +21,10 @@ description: "Data analytics and dashboard projects by Caleb, including Power BI
       </div>
     {% endif %}
 
+    {% include sorted-projects.html %}
+
     <div class="projects-grid" id="projects-grid">
-      {% for project in site.projects %}
+      {% for project in sorted_projects %}
         <a href="{{ project.url | relative_url }}" class="project-card" data-category="{{ project.category | default: "Project" }}">
           {% if project.image %}
             <div class="project-card__image">
