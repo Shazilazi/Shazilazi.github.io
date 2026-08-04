@@ -15,8 +15,9 @@ layout: default
       <a href="/projects/" class="btn">View my work</a>
       <a href="/about/" class="btn btn--secondary">About me</a>
     </div>
+    {% include sorted-projects.html %}
     {% assign all_tools = "" | split: "," %}
-    {% for project in site.projects %}
+    {% for project in published_projects %}
       {% if project.tools %}
         {% assign all_tools = all_tools | concat: project.tools %}
       {% endif %}
@@ -25,7 +26,7 @@ layout: default
 
     <div class="hero__stats reveal reveal--delay-2">
       <div>
-        <div class="stat__number">{{ site.projects.size }}</div>
+        <div class="stat__number">{{ published_projects.size }}</div>
         <div class="stat__label">Projects completed</div>
       </div>
       <div>
@@ -42,7 +43,6 @@ layout: default
       <h2 class="section__title section__title--accent">Featured projects</h2>
       <a href="{{ '/projects/' | relative_url }}" class="section__link">All projects →</a>
     </div>
-    {% include sorted-projects.html %}
     {% assign featured = sorted_projects | where: "featured", true %}
     <div class="projects-grid">
       {% if featured != empty %}
