@@ -5,6 +5,7 @@ summary: "Built a Python-powered data pipeline and Power BI dashboard to track t
 category: "Dashboard"
 date: 2026-07-01
 featured: true
+priority: 1
 tools: [Python, Scryfall API, MTGJSON, Power BI, Power Query, DAX]
 link: https://github.com/shazilazi/mtg-collection-tracker
 
@@ -12,7 +13,13 @@ link: https://github.com/shazilazi/mtg-collection-tracker
 image: /assets/images/projects/mtg-collection-tracker/cover.png
 ---
 
+# Magic: The Gathering Collection Tracker
+
+> A Python-powered Power BI dashboard built to track the value of my personal Magic: The Gathering collection over time, using live card data and historical pricing.
+
 ![Dashboard Overview](/assets/images/projects/mtg-collection-tracker/dashboard-overview.png)
+
+---
 
 # Overview
 
