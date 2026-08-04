@@ -1,14 +1,19 @@
 {% comment %}
-  Builds `sorted_projects`: all site.projects ordered by
+  Builds `sorted_projects`: all published site.projects ordered by
   1) priority (ascending — 1 is more important than 2), then
   2) date (descending — newest first) within the same priority.
   Projects with no `priority` set are placed after all ranked
   projects, sorted by date among themselves.
 
+  Projects with `published: false` are excluded here explicitly —
+  Jekyll's own handling of `published` is unreliable for custom
+  collections, so this filter doesn't depend on it.
+
   Usage: {% include sorted-projects.html %}
   Then use the `sorted_projects` variable.
 {% endcomment %}
-{% assign date_sorted = site.projects | sort: "date" | reverse %}
+{% assign published_projects = site.projects | where_exp: "project", "project.published != false" %}
+{% assign date_sorted = published_projects | sort: "date" | reverse %}
 {% assign sorted_projects = "" | split: "," %}
 {% for i in (1..20) %}
   {% assign tier = date_sorted | where: "priority", i %}
