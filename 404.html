@@ -1,0 +1,43 @@
+---
+layout: default
+title: Page Not Found
+permalink: /404.html
+---
+
+<section class="not-found">
+  <div class="container">
+
+    <div class="terminal">
+      <div class="terminal__bar">
+        <span class="terminal__dot terminal__dot--red"></span>
+        <span class="terminal__dot terminal__dot--yellow"></span>
+        <span class="terminal__dot terminal__dot--green"></span>
+      </div>
+      <div class="terminal__body">
+        <p class="terminal__line"><span class="terminal__prompt">$</span> cd <span id="broken-path">.</span></p>
+        <p class="terminal__line terminal__line--error">cd: no such file or directory: <span id="broken-path-2">.</span></p>
+        <p class="terminal__line"><span class="terminal__prompt">$</span> <span class="terminal__cursor"></span></p>
+      </div>
+    </div>
+
+    <p class="not-found__code">404</p>
+    <h1 class="not-found__title">Page not found</h1>
+    <p class="not-found__text">That page doesn't exist, or it's been moved.</p>
+
+    <div class="not-found__cta">
+      <a href="{{ '/' | relative_url }}" class="btn">Back home</a>
+      <a href="{{ '/projects/' | relative_url }}" class="btn btn--secondary">View projects</a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  (function () {
+    var path = window.location.pathname || '/';
+    var a = document.getElementById('broken-path');
+    var b = document.getElementById('broken-path-2');
+    if (a) a.textContent = path;
+    if (b) b.textContent = path;
+  })();
+</script>
