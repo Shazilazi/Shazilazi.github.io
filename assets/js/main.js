@@ -83,8 +83,12 @@ document.querySelectorAll('.hero__stats').forEach((el) => statObserver.observe(e
     const chip = e.target.closest('.filter-chip');
     if (!chip) return;
 
-    chips.forEach((c) => c.classList.remove('is-active'));
+    chips.forEach((c) => {
+      c.classList.remove('is-active');
+      c.setAttribute('aria-pressed', 'false');
+    });
     chip.classList.add('is-active');
+    chip.setAttribute('aria-pressed', 'true');
 
     const filter = chip.dataset.filter;
     let visibleCount = 0;
