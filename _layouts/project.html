@@ -33,38 +33,7 @@ layout: default
     {{ content }}
   </div>
 
-  {% assign sorted_projects = site.projects | sort: "date" | reverse %}
-  {% assign total = sorted_projects.size %}
-  {% for project in sorted_projects %}
-    {% if project.url == page.url %}
-      {% assign current_index = forloop.index0 %}
-    {% endif %}
-  {% endfor %}
-  {% assign prev_index = current_index | minus: 1 %}
-  {% assign next_index = current_index | plus: 1 %}
-  {% if prev_index >= 0 %}
-    {% assign prev_project = sorted_projects[prev_index] %}
-  {% endif %}
-  {% if next_index < total %}
-    {% assign next_project = sorted_projects[next_index] %}
-  {% endif %}
-
-  {% if prev_project or next_project %}
-  <nav class="project-nav">
-    {% if prev_project %}
-      <a href="{{ prev_project.url | relative_url }}" class="project-nav__link project-nav__link--prev">
-        <span class="project-nav__label">← Previous</span>
-        <span class="project-nav__title">{{ prev_project.title }}</span>
-      </a>
-    {% else %}
-      <span class="project-nav__spacer"></span>
-    {% endif %}
-    {% if next_project %}
-      <a href="{{ next_project.url | relative_url }}" class="project-nav__link project-nav__link--next">
-        <span class="project-nav__label">Next →</span>
-        <span class="project-nav__title">{{ next_project.title }}</span>
-      </a>
-    {% endif %}
-  </nav>
-  {% endif %}
+  <div class="project-return">
+    <a href="/projects/" class="btn btn--secondary">← Back to all projects</a>
+  </div>
 </article>
