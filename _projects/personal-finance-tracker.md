@@ -7,6 +7,7 @@ date: 2026-01-01
 featured: true
 priority: 1
 published: true
+sitemap: true
 tools: [Power BI, Power Query, DAX, Google Sheets, Google Forms]
 link: https://github.com/Shazilazi/personal-finance-report
 
