@@ -7,6 +7,7 @@ date: 2024-09-01
 featured: true
 priority: 2
 published: false
+sitemap: false
 tools: [Python, Power BI, SQL, pandas]
 link: https://github.com/yourusername/sales-dashboard
 
