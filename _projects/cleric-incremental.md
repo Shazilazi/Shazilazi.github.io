@@ -6,15 +6,12 @@ category: "Game"
 date: 2026-07-30
 featured: true
 priority: 2
-
-tools:
-  - HTML
-  - CSS
-  - JavaScript
-
-image: /assets/images/projects/dungeon-cleric/cover.png
-
+published: false
+tools: [HTML, CSS, JavaScript]
 link: /assets/games/undead-uprising.html
+
+# Thumbnail shown on the project cards
+image: /assets/images/projects/dungeon-cleric/cover.png
 ---
 
 # Dungeon Cleric
