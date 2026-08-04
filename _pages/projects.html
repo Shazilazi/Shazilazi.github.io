@@ -11,7 +11,8 @@ description: "Data analytics and dashboard projects by Caleb, including Power BI
       <h1 class="section__title">All projects</h1>
     </div>
 
-    {% assign categories = site.projects | map: "category" | compact | uniq | sort %}
+    {% include sorted-projects.html %}
+    {% assign categories = published_projects | map: "category" | compact | uniq | sort %}
     {% if categories.size > 1 %}
       <div class="filter-bar" role="group" aria-label="Filter projects by category">
         <button type="button" class="filter-chip is-active" data-filter="all" aria-pressed="true">All</button>
@@ -20,8 +21,6 @@ description: "Data analytics and dashboard projects by Caleb, including Power BI
         {% endfor %}
       </div>
     {% endif %}
-
-    {% include sorted-projects.html %}
 
     <div class="projects-grid" id="projects-grid">
       {% for project in sorted_projects %}
