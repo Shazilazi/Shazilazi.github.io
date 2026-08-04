@@ -5,7 +5,7 @@ summary: "A browser-based incremental RPG where you battle endless undead, earn 
 category: "Game"
 date: 2026-07-30
 featured: true
-priority: 1
+priority: 2
 
 tools:
   - HTML
