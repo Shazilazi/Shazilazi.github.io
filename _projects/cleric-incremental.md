@@ -7,6 +7,7 @@ date: 2026-07-30
 featured: true
 priority: 2
 published: false
+sitemap: false
 tools: [HTML, CSS, JavaScript]
 link: /assets/games/undead-uprising.html
 
