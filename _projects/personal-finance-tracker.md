@@ -8,6 +8,7 @@ featured: true
 priority: 1
 published: true
 sitemap: true
+status: in-progress
 tools: [Power BI, Power Query, DAX, Google Sheets, Google Forms]
 link: https://github.com/Shazilazi/personal-finance-report
 
