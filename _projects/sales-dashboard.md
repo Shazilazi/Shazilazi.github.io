@@ -8,6 +8,7 @@ featured: true
 priority: 2
 published: false
 sitemap: false
+status: new
 tools: [Python, Power BI, SQL, pandas]
 link: https://github.com/yourusername/sales-dashboard
 
