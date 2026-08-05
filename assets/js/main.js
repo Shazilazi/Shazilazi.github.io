@@ -65,7 +65,7 @@ const statObserver = new IntersectionObserver(
   },
   { threshold: 0.5 }
 );
-document.querySelectorAll('.hero__stats').forEach((el) => statObserver.observe(el));
+document.querySelectorAll('.hero__stats, .stats-strip').forEach((el) => statObserver.observe(el));
 
 /* ============================================
    PROJECT FILTERING
