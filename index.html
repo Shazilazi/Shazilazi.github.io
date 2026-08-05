@@ -53,7 +53,10 @@ layout: default
                 <img src="{{ project.image | relative_url }}" alt="{{ project.title }}" loading="lazy" />
               </div>
             {% endif %}
-            <span class="project-card__category">{{ project.category | default: "Project" }}</span>
+            <div class="project-card__meta-row">
+              <span class="project-card__category">{{ project.category | default: "Project" }}</span>
+              {% include status-badge.html status=project.status %}
+            </div>
             <h3 class="project-card__title">{{ project.title }}</h3>
             <p class="project-card__summary">{{ project.summary }}</p>
             {% if project.tools %}
