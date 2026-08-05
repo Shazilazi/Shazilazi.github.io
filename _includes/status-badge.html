@@ -1,0 +1,14 @@
+{% comment %}
+  Renders a small status-dot badge for a project: New, In Progress, or Complete.
+  Silently renders nothing if no status is set, so it's safe to include
+  on every project without requiring the front matter field.
+
+  Usage: {% include status-badge.html status=project.status %}
+{% endcomment %}
+{% if include.status == "new" %}
+  <span class="status-badge status-badge--new"><span class="status-dot"></span>New</span>
+{% elsif include.status == "in-progress" %}
+  <span class="status-badge status-badge--in-progress"><span class="status-dot"></span>In Progress</span>
+{% elsif include.status == "complete" %}
+  <span class="status-badge status-badge--complete"><span class="status-dot"></span>Complete</span>
+{% endif %}
