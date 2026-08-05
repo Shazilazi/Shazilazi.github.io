@@ -2,7 +2,7 @@
 layout: project
 title: "Magic: The Gathering Collection Tracker"
 summary: "Built a Python-powered data pipeline and Power BI dashboard to track the value of my personal Magic: The Gathering card collection over time, using the Scryfall and MTGJSON APIs."
-category: "Dashboard"
+category: "API"
 date: 2026-07-01
 featured: true
 priority: 1
