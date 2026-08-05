@@ -8,6 +8,7 @@ featured: true
 priority: 2
 published: false
 sitemap: false
+status: in-progress
 tools: [HTML, CSS, JavaScript]
 link: /assets/games/undead-uprising.html
 
