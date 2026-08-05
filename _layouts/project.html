@@ -7,6 +7,7 @@ layout: default
     <a href="/projects/" class="back-link">← All projects</a>
     <div class="project-detail__meta">
       <span class="tag">{{ page.category }}</span>
+      {% include status-badge.html status=page.status %}
       <span class="project-detail__date">{{ page.date | date: "%B %Y" }}</span>
     </div>
     <h1 class="project-detail__title">{{ page.title }}</h1>
