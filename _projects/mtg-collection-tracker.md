@@ -8,6 +8,7 @@ featured: true
 priority: 1
 published: true
 sitemap: true
+status: in-progress
 tools: [Python, Scryfall API, MTGJSON, Power BI, Power Query, DAX]
 link: https://github.com/shazilazi/mtg-collection-tracker
 
