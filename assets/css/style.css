@@ -14,6 +14,9 @@
   --accent2:     #00D4FF;
   --accent2-dim: rgba(0, 212, 255, 0.12);
 
+  --status-progress:     #FBBF24;
+  --status-progress-dim: rgba(251, 191, 36, 0.12);
+
   --font-mono: 'IBM Plex Mono', monospace;
   --font-sans: 'Inter', system-ui, sans-serif;
 
@@ -165,6 +168,7 @@ body::after {
 .btn:hover {
   background: var(--accent);
   color: #000;
+  box-shadow: 0 4px 20px rgba(0, 229, 168, 0.3);
   text-decoration: none;
 }
 .btn--nav { padding: 0.4rem 1rem; }
@@ -267,6 +271,14 @@ body::after {
   border-top: 1px solid var(--border);
   flex-wrap: wrap;
 }
+/* Reusable counter strip — same .stat__number/.stat__label pieces as the
+   hero, but usable standalone on any page (e.g. the Projects page). */
+.stats-strip {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin: 0 0 2.5rem;
+}
 .stat__number {
   font-family: var(--font-mono);
   font-size: 2rem;
@@ -319,6 +331,10 @@ body::after {
   letter-spacing: 0.1em;
   color: var(--muted);
 }
+.section__title::before {
+  content: '> ';
+  opacity: 0.5;
+}
 .section__title--accent {
   color: var(--accent);
   text-shadow: 0 0 12px rgba(0, 229, 168, 0.3);
@@ -362,6 +378,7 @@ body::after {
 .filter-chip:hover {
   border-color: var(--accent2);
   color: var(--text);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
 }
 .filter-chip.is-active {
   background: var(--accent-dim);
@@ -426,12 +443,70 @@ body::after {
 /* Ensure card content sits above the number */
 .project-card > * { position: relative; z-index: 1; }
 
+.project-card__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
 .project-card__category {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--accent2);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+/* ============================================
+   PROJECT STATUS BADGE
+   ============================================ */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem 0.2rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+/* New — actively pulsing, cyan */
+.status-badge--new {
+  color: var(--accent2);
+  border-color: rgba(0, 212, 255, 0.3);
+  background: var(--accent2-dim);
+}
+.status-badge--new .status-dot {
+  background: var(--accent2);
+  animation: blink 1.1s step-end infinite;
+}
+/* In progress — pulsing, amber */
+.status-badge--in-progress {
+  color: var(--status-progress);
+  border-color: rgba(251, 191, 36, 0.3);
+  background: var(--status-progress-dim);
+}
+.status-badge--in-progress .status-dot {
+  background: var(--status-progress);
+  animation: blink 0.9s step-end infinite;
+}
+/* Complete — solid, no animation, settled */
+.status-badge--complete {
+  color: var(--accent);
+  border-color: rgba(0, 229, 168, 0.3);
+  background: var(--accent-dim);
+}
+.status-badge--complete .status-dot {
+  background: var(--accent);
 }
 .project-card__title {
   font-size: 1.1rem;
@@ -845,6 +920,16 @@ body::after {
   max-width: 560px;
   margin: 0 auto;
   padding: 5rem 1.5rem;
+  position: relative;
+}
+.contact-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: -1;
 }
 .contact-page h1 {
   font-size: 2rem;
@@ -876,6 +961,7 @@ body::after {
 }
 .contact-link:hover {
   border-color: var(--accent);
+  box-shadow: 0 4px 20px rgba(0, 229, 168, 0.15);
   text-decoration: none;
 }
 .contact-link__label {
@@ -935,6 +1021,17 @@ body::after {
 .not-found {
   padding: 5rem 0 6rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+/* Faint echo of the hero's dot grid, ties this page back to the homepage */
+.not-found::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
 }
 .terminal {
   max-width: 480px;
@@ -945,6 +1042,13 @@ body::after {
   overflow: hidden;
   text-align: left;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+/* Inline variant — for embedding the terminal window in normal page
+   content (e.g. About page) rather than centering it as a standalone block */
+.terminal--inline {
+  max-width: none;
+  margin: 1rem 0 2rem;
+  box-shadow: none;
 }
 .terminal__bar {
   display: flex;
