@@ -173,7 +173,7 @@ body::after {
 }
 .btn--nav { padding: 0.4rem 1rem; }
 .btn--secondary {
-  border-color: var(--border);
+  border-color: var(--muted);
   color: var(--muted);
 }
 .btn--secondary:hover {
