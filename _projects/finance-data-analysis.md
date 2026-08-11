@@ -10,7 +10,7 @@ published: true
 sitemap: true
 status: in-progress
 tools: [Python, Pandas, scikit-learn, SciPy, Power BI, Power Query, DAX]
-link: https://github.com/Shazilazi/finance-data-analysis
+link: https://github.com/Shazilazi/finance-project
 
 # Thumbnail shown on the project cards
 image: /assets/images/projects/finance-data-analysis/cover.png
