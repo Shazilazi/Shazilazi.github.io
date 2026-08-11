@@ -10,7 +10,7 @@ published: true
 sitemap: true
 status: in-progress
 tools: [Python, Pandas, Power BI, Power Query, DAX]
-link: https://github.com/Shazilazi/retail-data-analysis
+link: https://github.com/Shazilazi/retail-project
 
 # Thumbnail shown on the project cards
 image: /assets/images/projects/retail-data-analysis/cover.png
